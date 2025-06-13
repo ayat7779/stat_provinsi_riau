@@ -14,7 +14,8 @@ $result = $conn->query($sql);
 ?>
 
 <h2>Daftar Kode Urut APBD</h2>
-
+<div><button><a href="../index.php">Home</a></button></div>
+<br>
 <div><button><a href="create.php">Tambah Data</a></button></div>
 
 <?php

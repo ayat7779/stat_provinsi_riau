@@ -151,7 +151,7 @@ if (!empty($success_message)): ?>
     </div>
     <script>
         setTimeout(function() {
-            window.location.href = '../index.php';
+            window.location.href = 'read.php';
         }, 3000);
     </script>
 <?php
@@ -188,11 +188,11 @@ elseif (!empty($general_error_message)): ?>
     </div>
     <div>
         <button type="submit">Update</button>
-        <a href="../index.php" class="back-link">Batal</a>
+        <a href="read.php" class="back-link">Batal</a>
     </div>
 </form>
 
 <?php
 $conn->close();
-include '../iyatemplates/footer.php';
+include '../templates/footer.php';
 ?>

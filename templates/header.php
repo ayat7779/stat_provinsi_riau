@@ -9,8 +9,3 @@
 <body>
     <div class="container">
         <h1>Manajemen Data Statistik Riau</h1>
-            <nav>
-                <a href="../index.php">Home</a>
-                <a href="apbd-kode-urut/read.php">Daftar Kode Urut APBD</a>
-            </nav>
-        <hr>
