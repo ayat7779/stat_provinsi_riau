@@ -10,7 +10,7 @@ include '../config/database.php';
 if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
     $id = trim($_GET["id"]);
 
-    $sql = "DELETE FROM kode_urut WHERE id = ?";
+    $sql = "DELETE FROM kode_catatan WHERE id = ?";
 
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("i", $param_id);

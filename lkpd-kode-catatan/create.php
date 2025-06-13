@@ -4,8 +4,8 @@ session_start();
 include '../config/database.php';
 include '../templates/header.php';
 
-$nourut_err = $uraian_err = $idkodelevel_err = "";
-$nourut = $uraian = $idkodelevel = "";
+$kodecatatan_err = $uraian_err = $idkodelevel_err = "";
+$kodecatatan = $uraian = $idkodelevel = "";
 
 $success_message = "";
 
@@ -29,23 +29,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $uraian = trim($_POST["uraian"]);
     }
 
-    if (empty(trim($_POST["no_urut"]))) {
-        $nourut_err = "Nomor Urut tidak boleh kosong.";
+    if (empty(trim($_POST["kode_catatan"]))) {
+        $kodecatatan_err = "Kode catatan tidak boleh kosong.";
     } else {
-        $sql = "SELECT id FROM kode_urut WHERE no_urut = ?";
+        $sql = "SELECT id FROM kode_catatan WHERE kode_catatan = ?";
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("s", $param_nourut_check);
-            $param_nourut_check = trim($_POST["no_urut"]);
+            $stmt->bind_param("s", $param_kodecatatan_check);
+            $param_kodecatatan_check = trim($_POST["kode_catatan"]);
 
             if ($stmt->execute()) {
                 $stmt->store_result();
                 if ($stmt->num_rows == 1) {
-                    $nourut_err = "Nomor Urut ini sudah terdaftar.";
+                    $kodecatatan_err = "Kode catatan ini sudah terdaftar.";
                 } else {
-                    $nourut = trim($_POST["no_urut"]);
+                    $kodecatatan = trim($_POST["kode_catatan"]);
                 }
             } else {
-                echo "Ada yang salah saat memeriksa Nomor Urut. Silakan coba lagi nanti.";
+                echo "Ada yang salah saat memeriksa kode catatan. Silakan coba lagi nanti.";
             }
             $stmt->close();
         }
@@ -59,19 +59,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $idkodelevel = (int)trim($_POST["id_kode_level"]);
     }
 
-    if (empty($nourut_err) && empty($uraian_err) && empty($idkodelevel_err)) {
-        $sql = "INSERT INTO kode_urut (no_urut, uraian, id_kode_level) VALUES (?, ?, ?)";
+    if (empty($kodecatatan_err) && empty($uraian_err) && empty($idkodelevel_err)) {
+        $sql = "INSERT INTO kode_catatan (kode_catatan, uraian, id_kode_level) VALUES (?, ?, ?)";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("ssi", $param_nourut, $param_uraian, $param_idkodelevel);
+            $stmt->bind_param("ssi", $param_kodecatatan, $param_uraian, $param_idkodelevel);
 
-            $param_nourut = $nourut;
+            $param_kodecatatan = $kodecatatan;
             $param_uraian = $uraian;
             $param_idkodelevel = $idkodelevel;
 
             if ($stmt->execute()) {
                 $success_message = "Data berhasil disimpan!";
-                $nourut = $uraian = $idkodelevel = "";
+                $kodecatatan = $uraian = $idkodelevel = "";
             } else {
                 echo "Ada yang salah saat menyimpan data. Silakan coba lagi nanti: ". $stmt->error;
             }
@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<h2>Tambah Data</h2>
+<h2>Tambah Data Kode Catatan</h2>
 
 <?php
 if (!empty($success_message)): ?>
@@ -97,9 +97,9 @@ if (!empty($success_message)): ?>
 
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
     <div>
-        <label>Nomor Urut</label>
-        <input type="text" name="no_urut" value="<?php echo htmlspecialchars($nourut); ?>">
-        <span class="error"><?php echo $nourut_err; ?></span>
+        <label>Kode Catatan</label>
+        <input type="text" name="kode_catatan" value="<?php echo htmlspecialchars($kodecatatan); ?>">
+        <span class="error"><?php echo $kodecatatan_err; ?></span>
     </div>
     <div>
         <label>Uraian</label>

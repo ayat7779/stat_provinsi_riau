@@ -7,8 +7,8 @@ session_start();
 
 include '../config/database.php';
 
-$nourut_err = $uraian_err = $idkodelevel_err = "";
-$id = $nourut = $uraian = $idkodelevel = "";
+$kode_catatan_err = $uraian_err = $idkodelevel_err = "";
+$id = $kode_catatan = $uraian = $idkodelevel = "";
 
 $success_message = "";
 $general_error_message = "";
@@ -30,30 +30,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $uraian = trim($_POST["uraian"]);
     }
 
-    if (empty(trim($_POST["nourut"]))) {
-        $nourut_err = "Nomor Urut tidak boleh kosong.";
+    if (empty(trim($_POST["kode_catatan"]))) {
+        $kode_catatan_err = "Kode catatan tidak boleh kosong.";
     } else {
-        $sql = "SELECT id FROM kode_urut WHERE no_urut = ? AND id <> ?";
+        $sql = "SELECT id FROM kode_catatan WHERE kode_catatan = ? AND id <> ?";
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("si", $param_nourut_check, $param_id_check);
-            $param_nourut_check = trim($_POST["nourut"]);
+            $stmt->bind_param("si", $param_kode_catatan_check, $param_id_check);
+            $param_kode_catatan_check = trim($_POST["kode_catatan"]);
             $param_id_check = $id;
 
             if ($stmt->execute()) {
                 $stmt->store_result();
                 if ($stmt->num_rows == 1) {
-                    $nourut_err = "Nomor Urut ini sudah terdaftar untuk data lain.";
+                    $kode_catatan_err = "Kode catatan ini sudah terdaftar untuk data lain.";
                 } else {
-                    $nourut = trim($_POST["nourut"]);
+                    $kode_catatan = trim($_POST["kode_catatan"]);
                 }
             } else {
-                error_log("Error executing no_urut check: " . $stmt->error);
-                $general_error_message = "Error: Ada masalah saat memeriksa Nomor Urut: " . $stmt->error;
+                error_log("Error executing kode_catatan check: " . $stmt->error);
+                $general_error_message = "Error: Ada masalah saat memeriksa Kode Catatan: " . $stmt->error;
             }
             $stmt->close();
         } else {
-            error_log("Error preparing no_urut check query: " . $conn->error);
-            $general_error_message = "Error: Ada masalah saat menyiapkan query Nomor Urut: " . $conn->error;
+            error_log("Error preparing kode_catatan check query: " . $conn->error);
+            $general_error_message = "Error: Ada masalah saat menyiapkan query Kode Catatan: " . $conn->error;
         }
     }
 
@@ -65,13 +65,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $idkodelevel = (int)trim($_POST["id_kode_level"]);
     }
 
-    if (empty($nourut_err) && empty($uraian_err) && empty($idkodelevel_err) && empty($general_error_message)) {
-        $sql = "UPDATE kode_urut SET no_urut = ?, uraian = ?, id_kode_level = ? WHERE id = ?";
+    if (empty($kode_catatan_err) && empty($uraian_err) && empty($idkodelevel_err) && empty($general_error_message)) {
+        $sql = "UPDATE kode_catatan SET kode_catatan = ?, uraian = ?, id_kode_level = ? WHERE id = ?";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("ssii", $param_nourut, $param_uraian, $param_idkodelevel, $param_id);
+            $stmt->bind_param("ssii", $param_kode_catatan, $param_uraian, $param_idkodelevel, $param_id);
 
-            $param_nourut = $nourut;
+            $param_kode_catatan = $kode_catatan;
             $param_uraian = $uraian;
             $param_idkodelevel = $idkodelevel;
             $param_id = $id;
@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (empty($general_error_message)) {
              $general_error_message = "Validasi gagal. Mohon periksa kembali input Anda.";
         }
-        $nourut = isset($_POST["nourut"]) ? trim($_POST["nourut"]) : '';
+        $kode_catatan = isset($_POST["kode_catatan"]) ? trim($_POST["kode_catatan"]) : '';
         $uraian = isset($_POST["uraian"]) ? trim($_POST["uraian"]) : '';
         $idkodelevel = isset($_POST["id_kode_level"]) ? (int)trim($_POST["id_kode_level"]) : '';
     }
@@ -108,9 +108,9 @@ if ($result_levels_reget) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !empty($id))) {
-    $sql_fetch = "SELECT ku.id, ku.no_urut, ku.uraian, ku.id_kode_level
-            FROM kode_urut ku
-            WHERE ku.id = ?";
+    $sql_fetch = "SELECT kc.id, kc.kode_catatan, kc.uraian, kc.id_kode_level
+            FROM kode_catatan kc
+            WHERE kc.id = ?";
     if ($stmt_fetch = $conn->prepare($sql_fetch)) {
         $stmt_fetch->bind_param("i", $param_id_fetch_reget);
         $param_id_fetch_reget = $id;
@@ -119,8 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !e
             $result_fetch = $stmt_fetch->get_result();
             if ($result_fetch->num_rows == 1) {
                 $row_fetch = $result_fetch->fetch_assoc();
-                if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && empty($nourut))) {
-                    $nourut = $row_fetch["no_urut"];
+                if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && empty($kode_catatan))) {
+                    $kode_catatan = $row_fetch["kode_catatan"];
                     $uraian = $row_fetch["uraian"];
                     $idkodelevel = $row_fetch["id_kode_level"];
                 }
@@ -165,8 +165,8 @@ elseif (!empty($general_error_message)): ?>
     <input type="hidden" name="id" value="<?php echo htmlspecialchars($id); ?>">
     <div>
         <label>Nomor Urut</label>
-        <input type="text" name="nourut" value="<?php echo htmlspecialchars($nourut); ?>">
-        <span class="error"><?php echo $nourut_err; ?></span>
+        <input type="text" name="kode_catatan" value="<?php echo htmlspecialchars($kode_catatan); ?>">
+        <span class="error"><?php echo $kode_catatan_err; ?></span>
     </div>
     <div>
         <label>Uraian</label>

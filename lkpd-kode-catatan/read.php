@@ -4,16 +4,16 @@ session_start();
 include '../config/database.php';
 include '../templates/header.php';
 
-$sql = "SELECT ku.id, ku.no_urut, ku.uraian, kl.nama_level
-        FROM kode_urut ku
+$sql = "SELECT kc.id, kc.kode_catatan, kc.uraian, kl.nama_level
+        FROM kode_catatan kc
         INNER JOIN kode_level kl
-        ON ku.id_kode_level = kl.id
-        ORDER BY ku.no_urut ASC";
+        ON kc.id_kode_level = kl.id
+        ORDER BY kc.kode_catatan ASC";
 $result = $conn->query($sql);
 
 ?>
 
-<h2>Daftar Kode Urut APBD</h2>
+<h2>Daftar Kode Catatan LKPD APBD</h2>
 <div><button><a href="../index.php">Home</a></button></div>
 <br>
 <div><button><a href="create.php">Tambah Data</a></button></div>
@@ -52,7 +52,7 @@ if ($result->num_rows > 0):
             ?>
                 <tr>
                     <td style="display: none;"><?php echo htmlspecialchars($row['id']); ?></td>
-                    <td><?php echo htmlspecialchars($row['no_urut']); ?></td>
+                    <td><?php echo htmlspecialchars($row['kode_catatan']); ?></td>
                     <td><?php echo htmlspecialchars($row['uraian']); ?></td>
                     <td><?php echo htmlspecialchars($row['nama_level']); ?></td>
                     <td class="actions">
