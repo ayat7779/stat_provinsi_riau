@@ -16,6 +16,11 @@ $sql = "SELECT ku.id, ku.no_urut, ku.uraian, kl.nama_level
         ORDER BY ku.no_urut ASC"; // Menggunakan ku.no_urut untuk pengurutan
 $result = $conn->query($sql);
 ?>
+        <nav>
+            <a href="index.php">Home</a>
+            <a href="apbd-kode-urut/create.php">Tambah Data</a>
+        </nav>
+        <hr>
 
 <h2>Daftar Kode Urut APBD</h2>
 
@@ -58,8 +63,8 @@ if (isset($_GET['error'])): ?>
                     <td><?php echo htmlspecialchars($row['nama_level']); ?></td>
                     <td class="actions">
                         <!-- PENTING: Pastikan $row['id'] memiliki nilai di sini -->
-                        <a href="update.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="edit">Edit</a>
-                        <a href="delete.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="delete" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
+                        <a href="apbd-kode-urut/update.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="edit">Edit</a>
+                        <a href="apbd-kode-urut/delete.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="delete" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
                     </td>
                 </tr>
             <?php endwhile; ?>

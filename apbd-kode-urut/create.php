@@ -4,9 +4,9 @@
 session_start();
 
 // Sertakan file koneksi database
-include 'config/database.php';
+include '../config/database.php';
 // Sertakan header HTML
-include 'templates/header.php';
+include '../templates/header.php';
 
 // Inisialisasi variabel untuk menampung pesan error
 $nourut_err = $uraian_err = $idkodelevel_err = "";
@@ -119,7 +119,7 @@ if (!empty($success_message)): ?>
     <script>
         // JavaScript untuk redirect setelah 10 detik
         setTimeout(function() {
-            window.location.href = 'index.php';
+            window.location.href = '../index.php';
         }, 2000); // 1000 milidetik = 1 detik
     </script>
 <?php endif; ?>
@@ -159,5 +159,5 @@ if (!empty($success_message)): ?>
 // Tutup koneksi database
 $conn->close();
 // Sertakan footer HTML
-include 'templates/footer.php';
+include '../templates/footer.php';
 ?>

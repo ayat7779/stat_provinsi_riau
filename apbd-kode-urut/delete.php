@@ -8,7 +8,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Sertakan file koneksi database
-include 'config/database.php';
+include '../config/database.php';
 
 // Periksa apakah ID diterima melalui parameter GET dan tidak kosong
 if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
@@ -30,14 +30,15 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
         if ($stmt->execute()) {
             // Set pesan sukses di session
             $_SESSION['message'] = "Data berhasil dihapus!";
+            
             // Redirect ke halaman utama setelah sukses
-            header("location: index.php");
+            header("location: ../index.php");
             exit(); // Pastikan script berhenti setelah redirect
         } else {
             // Jika eksekusi gagal, set pesan error
             error_log("Error executing delete query: " . $stmt->error);
             $_SESSION['message'] = "Error: Gagal menghapus data. Silakan coba lagi nanti atau cek log server.";
-            header("location: index.php"); // Redirect kembali meskipun ada error
+            header("location: ../index.php"); // Redirect kembali meskipun ada error
             exit();
         }
         // Tutup statement
@@ -46,13 +47,13 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
         // Jika prepared statement gagal disiapkan
         error_log("Error preparing delete query: " . $conn->error);
         $_SESSION['message'] = "Error: Ada masalah saat menyiapkan query hapus.";
-        header("location: index.php");
+        header("location: ../index.php");
         exit();
     }
 } else {
     // Jika ID tidak disediakan atau kosong, redirect ke halaman utama dengan pesan error
     $_SESSION['message'] = "Error: ID data tidak ditemukan untuk dihapus.";
-    header("location: index.php");
+    header("location: ../index.php");
     exit();
 }
 

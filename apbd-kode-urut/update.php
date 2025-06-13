@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 session_start();
 
 // Sertakan file koneksi database. Pastikan TIDAK ADA spasi/baris kosong di awal file database.php
-include 'config/database.php';
+include '../config/database.php';
 
 // Inisialisasi variabel untuk menampung pesan error
 $nourut_err = $uraian_err = $idkodelevel_err = "";
@@ -29,7 +29,7 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
     $id = trim($_POST["id"]);
 } else {
     // Jika ID tidak ada baik di GET maupun POST, redirect ke halaman utama
-    header("location: index.php?error=no_id_found"); // Pesan error baru
+    header("location: ../index.php?error=no_id_found"); // Pesan error baru
     exit();
 }
 
@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !e
                     $idkodelevel = $row_fetch["id_kode_level"];
                 }
             } else {
-                header("location: index.php?error=data_not_found_on_reget");
+                header("location: ../index.php?error=data_not_found_on_reget");
                 exit();
             }
         } else {
@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !e
 
 
 // --- SERTAKAN HEADER HTML DI SINI, SETELAH SEMUA LOGIKA PEMROSESAN LENGKAP ---
-include 'templates/header.php';
+include '../templates/header.php';
 ?>
 
 <h2>Edit Data Kode Urut</h2>
@@ -190,7 +190,7 @@ if (!empty($success_message)): ?>
     <script>
         // JavaScript untuk redirect setelah 10 detik
         setTimeout(function() {
-            window.location.href = 'index.php';
+            window.location.href = '../index.php';
         }, 3000); // 1000 milidetik = 1 detik
     </script>
 <?php
@@ -230,7 +230,7 @@ elseif (!empty($general_error_message)): ?>
     </div>
     <div>
         <button type="submit">Update</button>
-        <a href="index.php" class="back-link">Batal</a>
+        <a href="../index.php" class="back-link">Batal</a>
     </div>
 </form>
 
@@ -238,5 +238,5 @@ elseif (!empty($general_error_message)): ?>
 // Tutup koneksi database
 $conn->close();
 // Sertakan footer HTML
-include 'templates/footer.php';
+include '../iyatemplates/footer.php';
 ?>
