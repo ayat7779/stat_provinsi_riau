@@ -1,23 +1,15 @@
 <?php
-// Mulai session di awal file (masih diperlukan jika ada logika session lain,
-// tapi untuk pesan sukses di halaman ini tidak lagi utama)
 session_start();
 
-// Sertakan file koneksi database
 include '../config/database.php';
-// Sertakan header HTML
 include '../templates/header.php';
 
-// Inisialisasi variabel untuk menampung pesan error
 $nourut_err = $uraian_err = $idkodelevel_err = "";
-// Inisialisasi variabel untuk menampung nilai dari form
 $nourut = $uraian = $idkodelevel = "";
 
-// Inisialisasi variabel untuk pesan sukses
 $success_message = "";
 
-// --- Ambil data Level dari database untuk combobox ---
-$levels = []; // Array untuk menyimpan data level
+$levels = [];
 $sql_levels = "SELECT id, nama_level, akronim FROM kode_level ORDER BY id ASC";
 $result_levels = $conn->query($sql_levels);
 
@@ -28,23 +20,18 @@ if ($result_levels) {
 } else {
     echo "Gagal mengambil data level: " . $conn->error;
 }
-// --- Akhir pengambilan data Level ---
 
-// Periksa apakah request adalah POST (saat form disubmit)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Validasi uraian
     if (empty(trim($_POST["uraian"]))) {
         $uraian_err = "Uraian tidak boleh kosong.";
     } else {
         $uraian = trim($_POST["uraian"]);
     }
 
-    // Validasi Nomor Urut
     if (empty(trim($_POST["no_urut"]))) {
         $nourut_err = "Nomor Urut tidak boleh kosong.";
     } else {
-        // Cek apakah Nomor Urut sudah ada
         $sql = "SELECT id FROM kode_urut WHERE no_urut = ?";
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bind_param("s", $param_nourut_check);
@@ -64,7 +51,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // --- Validasi ID Kode Level (dari combobox) ---
     if (empty(trim($_POST["id_kode_level"]))) {
         $idkodelevel_err = "Level tidak boleh kosong.";
     } elseif (!is_numeric(trim($_POST["id_kode_level"]))) {
@@ -73,35 +59,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $idkodelevel = (int)trim($_POST["id_kode_level"]);
     }
 
-
-    // --- Proses Penyimpanan Data ---
-    // Jika tidak ada error validasi, masukkan data ke database
     if (empty($nourut_err) && empty($uraian_err) && empty($idkodelevel_err)) {
-        // Query INSERT ke tabel kode_urut
         $sql = "INSERT INTO kode_urut (no_urut, uraian, id_kode_level) VALUES (?, ?, ?)";
 
         if ($stmt = $conn->prepare($sql)) {
-            // Bind parameter ke statement yang disiapkan
             $stmt->bind_param("ssi", $param_nourut, $param_uraian, $param_idkodelevel);
 
-            // Set parameter
             $param_nourut = $nourut;
             $param_uraian = $uraian;
             $param_idkodelevel = $idkodelevel;
 
-            // Jalankan statement
             if ($stmt->execute()) {
-                // Set pesan sukses
                 $success_message = "Data berhasil disimpan!";
-                // Kosongkan form setelah sukses
                 $nourut = $uraian = $idkodelevel = "";
-                // Namun, untuk redirect otomatis, mengosongkan form tidak terlalu relevan
-                // karena halaman akan segera dialihkan.
             } else {
-                // Pesan error jika eksekusi statement gagal saat menyimpan
                 echo "Ada yang salah saat menyimpan data. Silakan coba lagi nanti: ". $stmt->error;
             }
-            // Tutup statement
             $stmt->close();
         }
     }
@@ -111,20 +84,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <h2>Tambah Data</h2>
 
 <?php
-// Tampilkan pesan sukses jika ada
 if (!empty($success_message)): ?>
     <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
         <?php echo $success_message; ?>
     </div>
     <script>
-        // JavaScript untuk redirect setelah 10 detik
         setTimeout(function() {
-            window.location.href = '../index.php';
-        }, 2000); // 1000 milidetik = 1 detik
+            window.location.href = 'read.php';
+        }, 2000);
     </script>
 <?php endif; ?>
 
-<!-- Form untuk menambah data kode_urut -->
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
     <div>
         <label>Nomor Urut</label>
@@ -151,13 +121,11 @@ if (!empty($success_message)): ?>
     </div>
     <div>
         <button type="submit">Simpan</button>
-        <a href="index.php" class="back-link">Batal</a>
+        <a href="read.php" class="back-link">Batal</a>
     </div>
 </form>
 
 <?php
-// Tutup koneksi database
 $conn->close();
-// Sertakan footer HTML
 include '../templates/footer.php';
 ?>
