@@ -24,13 +24,13 @@ if ($result_levels) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty(trim($_POST["uraian"]))) {
-        $uraian_err = "Uraian tidak boleh kosong.";
+        $uraian_err = "<p class='error-message'>Uraian tidak boleh kosong.</p>";
     } else {
         $uraian = trim($_POST["uraian"]);
     }
 
     if (empty(trim($_POST["kode_catatan"]))) {
-        $kodecatatan_err = "Kode catatan tidak boleh kosong.";
+        $kodecatatan_err = "<p class='error-message'>Kode catatan tidak boleh kosong.</p>";
     } else {
         $sql = "SELECT id FROM kode_catatan WHERE kode_catatan = ?";
         if ($stmt = $conn->prepare($sql)) {
@@ -40,21 +40,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($stmt->execute()) {
                 $stmt->store_result();
                 if ($stmt->num_rows == 1) {
-                    $kodecatatan_err = "Kode catatan ini sudah terdaftar.";
+                    $kodecatatan_err = "<p class='error-message'>Kode catatan ini sudah terdaftar.</p>";
                 } else {
                     $kodecatatan = trim($_POST["kode_catatan"]);
                 }
             } else {
-                echo "Ada yang salah saat memeriksa kode catatan. Silakan coba lagi nanti.";
+                echo "<p class='error-message'>Ada yang salah saat memeriksa kode catatan. Silakan coba lagi nanti.</p>";
             }
             $stmt->close();
         }
     }
 
     if (empty(trim($_POST["id_kode_level"]))) {
-        $idkodelevel_err = "Level tidak boleh kosong.";
+        $idkodelevel_err = "<p class='error-message'>Level tidak boleh kosong.</p>";
     } elseif (!is_numeric(trim($_POST["id_kode_level"]))) {
-        $idkodelevel_err = "Pilihan level tidak valid.";
+        $idkodelevel_err = "<p class='error-message'>Pilihan level tidak valid.</p>";
     } else {
         $idkodelevel = (int)trim($_POST["id_kode_level"]);
     }
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $success_message = "Data berhasil disimpan!";
                 $kodecatatan = $uraian = $idkodelevel = "";
             } else {
-                echo "Ada yang salah saat menyimpan data. Silakan coba lagi nanti: ". $stmt->error;
+                echo "<p class='error-message'>Ada yang salah saat menyimpan data. Silakan coba lagi nanti: </p>". $stmt->error;
             }
             $stmt->close();
         }
