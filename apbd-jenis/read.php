@@ -10,9 +10,10 @@ $result = $conn->query($sql);
 ?>
 
 <h2>Daftar Jenis APBD</h2>
-<div><button><a href="../index.php">Home</a></button></div>
-<br>
-<div><button><a href="create.php">Tambah Data</a></button></div>
+<div class="button-group">
+    <button><a href="../index.php">Home</a></button>
+    <button><a href="create.php">Tambah Data</a></button>
+</div>
 
 <?php
 if (isset($_SESSION['message'])): ?>

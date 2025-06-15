@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<h2>Tambah Data Jenis APBD</h2>
+<h2>Tambah Data Kode Level</h2>
 
 <?php
 if (!empty($success_message)): ?>

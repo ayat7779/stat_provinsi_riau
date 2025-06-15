@@ -119,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !e
 include '../templates/header.php';
 ?>
 
-<h2>Edit Data Jenis APBD</h2>
+<h2>Edit Data Kode Level</h2>
 
 <?php
 if (!empty($success_message)): ?>
