@@ -7,8 +7,8 @@ session_start();
 
 include '../config/database.php';
 
-$uraian_err = $akronim_err = "";
-$id = $uraian = $akronim = "";
+$nama_level_err = $akronim_err = "";
+$id = $nama_level = $akronim = "";
 
 $success_message = "";
 $general_error_message = "";
@@ -24,30 +24,30 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   
-    if (empty(trim($_POST["uraian"]))) {
-        $uraian_err = "Uraian tidak boleh kosong.";
+    if (empty(trim($_POST["nama_level"]))) {
+        $nama_level_err = "nama_level tidak boleh kosong.";
     } else {
-        $sql = "SELECT id FROM jenis_apbd WHERE uraian = ? AND id <> ?";
+        $sql = "SELECT id FROM kode_level WHERE nama_level = ? AND id <> ?";
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("si", $param_uraian_check, $param_id_check);
-            $param_uraian_check = trim($_POST["uraian"]);
+            $stmt->bind_param("si", $param_nama_level_check, $param_id_check);
+            $param_nama_level_check = trim($_POST["nama_level"]);
             $param_id_check = $id;
 
             if ($stmt->execute()) {
                 $stmt->store_result();
                 if ($stmt->num_rows == 1) {
-                    $uraian_err = "Uraian ini sudah terdaftar untuk data lain.";
+                    $nama_level_err = "nama_level ini sudah terdaftar untuk data lain.";
                 } else {
-                    $uraian = trim($_POST["uraian"]);
+                    $nama_level = trim($_POST["nama_level"]);
                 }
             } else {
-                error_log("Error executing uraian check: " . $stmt->error);
-                $general_error_message = "Error: Ada masalah saat memeriksa uraian: " . $stmt->error;
+                error_log("Error executing nama_level check: " . $stmt->error);
+                $general_error_message = "Error: Ada masalah saat memeriksa nama_level: " . $stmt->error;
             }
             $stmt->close();
         } else {
-            error_log("Error preparing uraian check query: " . $conn->error);
-            $general_error_message = "Error: Ada masalah saat menyiapkan query uraian: " . $conn->error;
+            error_log("Error preparing nama_level check query: " . $conn->error);
+            $general_error_message = "Error: Ada masalah saat menyiapkan query nama_level: " . $conn->error;
         }
     }
 
@@ -57,13 +57,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $akronim = trim($_POST["akronim"]);
     }
 
-    if (empty($uraian_err) && empty($akronim_err) && empty($general_error_message)) {
-        $sql = "UPDATE jenis_apbd SET uraian = ?, akronim = ? WHERE id = ?";
+    if (empty($nama_level_err) && empty($akronim_err) && empty($general_error_message)) {
+        $sql = "UPDATE kode_level SET nama_level = ?, akronim = ? WHERE id = ?";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("ssi", $param_uraian, $param_akronim, $param_id);
+            $stmt->bind_param("ssi", $param_nama_level, $param_akronim, $param_id);
 
-            $param_uraian = $uraian;
+            $param_nama_level = $nama_level;
             $param_akronim = $akronim;
             $param_id = $id;
 
@@ -82,13 +82,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (empty($general_error_message)) {
              $general_error_message = "Validasi gagal. Mohon periksa kembali input Anda.";
         }
-        $uraian = isset($_POST["uraian"]) ? trim($_POST["uraian"]) : '';
+        $nama_level = isset($_POST["nama_level"]) ? trim($_POST["nama_level"]) : '';
         $akronim = isset($_POST["akronim"]) ? trim($_POST["akronim"]) : '';
     }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !empty($id))) {
-    $sql_fetch = "SELECT * FROM jenis_apbd WHERE id = ?";
+    $sql_fetch = "SELECT * FROM kode_level WHERE id = ?";
     if ($stmt_fetch = $conn->prepare($sql_fetch)) {
         $stmt_fetch->bind_param("i", $param_id_fetch_reget);
         $param_id_fetch_reget = $id;
@@ -97,8 +97,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !e
             $result_fetch = $stmt_fetch->get_result();
             if ($result_fetch->num_rows == 1) {
                 $row_fetch = $result_fetch->fetch_assoc();
-                if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && empty($uraian))) {
-                    $uraian = $row_fetch["uraian"];
+                if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && empty($nama_level))) {
+                    $nama_level = $row_fetch["nama_level"];
                     $akronim = $row_fetch["akronim"];
                 }
             } else {
@@ -141,9 +141,9 @@ elseif (!empty($general_error_message)): ?>
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
     <input type="hidden" name="id" value="<?php echo htmlspecialchars($id); ?>">
     <div>
-        <label>Uraian</label>
-        <input type="text" name="uraian" value="<?php echo htmlspecialchars($uraian); ?>">
-        <span class="error"><?php echo $uraian_err; ?></span>
+        <label>nama_level</label>
+        <input type="text" name="nama_level" value="<?php echo htmlspecialchars($nama_level); ?>">
+        <span class="error"><?php echo $nama_level_err; ?></span>
     </div>
     <div>
         <label>Akronim</label>
