@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!is_numeric(trim($_POST["jumlah_anggaran"]))) {
         $jumlah_anggaran_err = "<p class='error-message'>Jumlah anggaran harus berupa angka.</p>";
     } else {
-        $jumlah_anggaran = (int)trim($_POST["jumlah_anggaran"]);
+        $jumlah_anggaran = (float)trim($_POST["jumlah_anggaran"]);
     }
 
     if (trim($_POST["jumlah_realisasi"]) === "") {
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!is_numeric(trim($_POST["jumlah_realisasi"]))) {
         $jumlah_realisasi_err = "<p class='error-message'>Jumlah realisasi harus berupa angka.</p>";
     } else {
-        $jumlah_realisasi = (int)trim($_POST["jumlah_realisasi"]);
+        $jumlah_realisasi = (float)trim($_POST["jumlah_realisasi"]);
     }
 
     if (empty($tahun_lkpd_err) && empty($id_kode_catatan_err) && empty($jumlah_anggaran_err) && empty($jumlah_realisasi_err)) {
@@ -61,10 +61,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt = $conn->prepare($sql)) {
             // Note: The order of parameters in bind_param should match the order in the SET clause
-            $stmt->bind_param("siiii", $param_tahun_lkpd, $param_id_kode_catatan, $param_jumlah_anggaran, $param_jumlah_realisasi, $id);
+            $stmt->bind_param("siddi", $param_tahun_lkpd, $param_id_kode_catatan, $param_jumlah_anggaran, $param_jumlah_realisasi, $id);
 
             $param_tahun_lkpd = $tahun_lkpd;
-            $param_id_kode_catatan = $id_kode_catatan; // Corrected variable name
+            $param_id_kode_catatan = $id_kode_catatan;
             $param_jumlah_anggaran = $jumlah_anggaran;
             $param_jumlah_realisasi = $jumlah_realisasi;
 
@@ -86,8 +86,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Retain values if validation fails for the form
         $tahun_lkpd = isset($_POST["tahun_lkpd"]) ? trim($_POST["tahun_lkpd"]) : '';
         $id_kode_catatan = isset($_POST["id_kode_catatan"]) ? (int)trim($_POST["id_kode_catatan"]) : '';
-        $jumlah_anggaran = isset($_POST["jumlah_anggaran"]) ? (int)trim($_POST["jumlah_anggaran"]) : '';
-        $jumlah_realisasi = isset($_POST["jumlah_realisasi"]) ? (int)trim($_POST["jumlah_realisasi"]) : '';
+        $jumlah_anggaran = isset($_POST["jumlah_anggaran"]) ? (float)trim($_POST["jumlah_anggaran"]) : '';
+        $jumlah_realisasi = isset($_POST["jumlah_realisasi"]) ? (float)trim($_POST["jumlah_realisasi"]) : '';
     }
 }
 

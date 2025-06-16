@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!is_numeric(trim($_POST["jumlah_anggaran"]))) {
         $jumlah_anggaran_err = "<p class='error-message'>Jumlah anggaran harus berupa angka.</p>";
     } else {
-        $jumlah_anggaran = (int)trim($_POST["jumlah_anggaran"]);
+        $jumlah_anggaran = (float)trim($_POST["jumlah_anggaran"]);
     }
 
     if (trim($_POST["jumlah_realisasi"]) === "") {
@@ -53,14 +53,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!is_numeric(trim($_POST["jumlah_realisasi"]))) {
         $jumlah_realisasi_err = "<p class='error-message'>Jumlah realisasi harus berupa angka.</p>";
     } else {
-        $jumlah_realisasi = (int)trim($_POST["jumlah_realisasi"]);
+        $jumlah_realisasi = (float)trim($_POST["jumlah_realisasi"]);
     }
 
     if (empty($tahun_lkpd_err) && empty($id_kode_catatan_err) && empty($jumlah_anggaran_err) && empty($jumlah_realisasi_err)) {
         $sql = "INSERT INTO lkpd_apbd_lampiran_1 (tahun_lkpd, id_kode_catatan, jumlah_anggaran, jumlah_realisasi) VALUES (?, ?, ?, ?)";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("siii", $param_tahun_lkpd, $param_id_kode_catatan, $param_jumlah_anggaran, $param_jumlah_realisasi);
+            $stmt->bind_param("sidd", $param_tahun_lkpd, $param_id_kode_catatan, $param_jumlah_anggaran, $param_jumlah_realisasi);
 
             $param_tahun_lkpd = $tahun_lkpd;
             $param_id_kode_catatan = $id_kode_catatan;
