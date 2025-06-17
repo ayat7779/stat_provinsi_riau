@@ -109,9 +109,9 @@ if ($result->num_rows > 0):
                 $tahun_display = htmlspecialchars($row['tahun_lkpd']);
                 $kode_display = htmlspecialchars($row['kode']);
                 $uraian_display = htmlspecialchars($row['uraian']);
-                $anggaran_display = htmlspecialchars(number_format($row['anggaran'], 2));
-                $realisasi_display = htmlspecialchars(number_format($row['realisasi'], 2));
-                $persentase_display = htmlspecialchars(number_format($row['persentase'], 2)) . '%';
+                $anggaran_display = htmlspecialchars(number_format($row['anggaran']??0, 2));
+                $realisasi_display = htmlspecialchars(number_format($row['realisasi']??0, 2));
+                $persentase_display = htmlspecialchars(number_format($row['persentase']??0, 2)) . '%';
 
                 if ($is_level_1_or_2) {
                     $tahun_display = '<strong>' . $tahun_display . '</strong>';

@@ -86,7 +86,7 @@ if (!empty($success_message)): ?>
     <script>
         setTimeout(function() {
             window.location.href = 'read.php';
-        }, 2000);
+        }, 1500);
     </script>
 <?php endif; ?>
 
