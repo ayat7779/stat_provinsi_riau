@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tahun_lkpd = trim($_POST["tahun_lkpd"]);
     }
 
-    if (trim($_POST["id_kode_catatan"]) === "") { // Changed from empty() to trim() === "" for 0 values
+    if (trim($_POST["id_kode_catatan"]) === "") { 
         $id_kode_catatan_err = "<p class='error-message'>Pilihan kode catatan tidak boleh kosong.</p>";
     } elseif (!is_numeric(trim($_POST["id_kode_catatan"]))) {
         $id_kode_catatan_err = "<p class='error-message'>Pilihan kode catatan tidak valid.</p>";
@@ -60,7 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 WHERE id = ?";
 
         if ($stmt = $conn->prepare($sql)) {
-            // Note: The order of parameters in bind_param should match the order in the SET clause
             $stmt->bind_param("siddi", $param_tahun_lkpd, $param_id_kode_catatan, $param_jumlah_anggaran, $param_jumlah_realisasi, $id);
 
             $param_tahun_lkpd = $tahun_lkpd;
@@ -108,11 +107,7 @@ if ($result_kode_catatan) {
     $general_error_message = "Error: Gagal memuat pilihan Kode Catatan: " . $conn->error;
 }
 
-
-// This block is for fetching data when the page loads (GET request)
-// or when there are validation errors and we need to re-populate the form
 if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !empty($id))) {
-    // Fetch data from lkpd_apbd_lampiran_1 for initial form population
     $sql_fetch = "SELECT tahun_lkpd, id_kode_catatan, jumlah_anggaran, jumlah_realisasi
                   FROM lkpd_apbd_lampiran_1
                   WHERE id = ?";
@@ -124,7 +119,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !e
             $result_fetch = $stmt_fetch->get_result();
             if ($result_fetch->num_rows == 1) {
                 $row_fetch = $result_fetch->fetch_assoc();
-                // Only re-populate if it's a GET request or if validation failed and we didn't get values from POST
                 if ($_SERVER["REQUEST_METHOD"] == "GET" || empty($tahun_lkpd)) {
                     $tahun_lkpd = $row_fetch["tahun_lkpd"];
                     $id_kode_catatan = $row_fetch["id_kode_catatan"];
@@ -146,7 +140,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !e
     }
 }
 
-
 include '../templates/header.php';
 ?>
 
@@ -159,7 +152,7 @@ if (!empty($success_message)): ?>
     </div>
     <script>
         setTimeout(function() {
-            window.location.href = 'read.php'; // Redirect to the read page for lkpd_apbd_lampiran_1
+            window.location.href = 'read.php';
         }, 3000);
     </script>
 <?php

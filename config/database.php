@@ -1,5 +1,5 @@
 <?php
-$host = 'localhost'; 
+$host = 'localhost'; // Ganti dengan host database Anda
 $user = 'root';      
 $pass = '';          
 $db_name = 'stat_provinsi_riau'; 

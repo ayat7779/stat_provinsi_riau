@@ -10,10 +10,7 @@ $tahun_lkpd = $id_kode_catatan = $jumlah_anggaran = $jumlah_realisasi ="";
 $success_message = "";
 
 $kdcatatan = [];
-$sql_kdcatatan = "SELECT * 
-                  FROM kode_catatan 
-                  WHERE id_kode_level = 3
-                  ORDER BY id ASC";
+$sql_kdcatatan = "SELECT * FROM kode_catatan WHERE id_kode_level = 3 ORDER BY kode_catatan ASC";
 $result_kdcatatan = $conn->query($sql_kdcatatan);
 
 if ($result_kdcatatan) {
