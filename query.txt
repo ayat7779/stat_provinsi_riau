@@ -1,4 +1,5 @@
-SELECT kc.id_kode_level, tahun_lkpd, kode, uraian, anggaran, realisasi, (realisasi/anggaran)*100 AS persentase FROM (
+      
+            SELECT kc.id_kode_level, tahun_lkpd, kode, uraian, anggaran, realisasi, (realisasi/anggaran)*100 AS persentase FROM (
             SELECT tahun_lkpd, LEFT(kode_catatan,2) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
             GROUP BY tahun_lkpd, kode
             UNION ALL
@@ -7,19 +8,6 @@ SELECT kc.id_kode_level, tahun_lkpd, kode, uraian, anggaran, realisasi, (realisa
             UNION ALL
             SELECT tahun_lkpd, kode_catatan AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
             GROUP BY tahun_lkpd, kode
-            UNION ALL
-		SELECT '' AS id_kode_level, a1.tahun_lkpd, '' AS kode, '' AS uraian, SUM(total_anggaran_pendapatan) AS anggaran, SUM(total_realisasi_pendapatan) AS r, (SUM(total_realisasi_pendapatan)/SUM(total_anggaran_pendapatan))*100 AS persentase FROM (    
-			SELECT tahun_lkpd, SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN lad.jumlah_anggaran ELSE 0 END) AS total_anggaran_pendapatan, '' AS total_realisasi_pendapatan
-			FROM lkpd_apbd_lampiran_1 lad
-			INNER JOIN kode_catatan kc ON lad.id_kode_catatan = kc.id
-			GROUP BY tahun_lkpd
-			UNION ALL
-			SELECT tahun_lkpd,  '' AS total_anggaran_pendapatan, SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN lad.jumlah_realisasi ELSE 0 END) AS total_realisasi_pendapatan
-			FROM lkpd_apbd_lampiran_1 lad
-			INNER JOIN kode_catatan kc ON lad.id_kode_catatan = kc.id
-			GROUP BY tahun_lkpd
-		) AS a1 GROUP BY a1.tahun_lkpd
             ) AS a
             INNER JOIN kode_catatan AS kc ON a.kode = kc.`kode_catatan`
-            WHERE a.tahun_lkpd = '2022'
-            ORDER BY a.tahun_lkpd, a.kode ASC
+            ORDER BY tahun_lkpd, kode

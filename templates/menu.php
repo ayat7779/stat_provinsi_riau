@@ -1,10 +1,8 @@
             <nav>
-                <ul>
-                    <li><a href="apbd-kode-urut/read.php">Daftar Kode Urut APBD</a></li>
-                    <li><a href="lkpd-kode-catatan/read.php">Daftar Kode Catatan LKPD APBD</a></li>
-                    <li><a href="apbd-jenis/read.php">Daftar Jenis APBD</a></li>
-                    <li><a href="level-kode/read.php">Daftar Level Kode</a></li>
-                    <li><a href="lkpd-lampiran-satu/read.php">Daftar LKPD Lampiran 1</a></li>
-                </ul>
+                    <a href="apbd-kode-urut/read.php">Kode Urut APBD</a>
+                    <a href="lkpd-kode-catatan/read.php">Kode Catatan LKPD APBD</a>
+                    <a href="apbd-jenis/read.php">Jenis APBD</a>
+                    <a href="level-kode/read.php">Level Kode</a>
+                    <a href="lkpd-lampiran-satu/read.php">LKPD Lampiran 1</a>
             </nav>
         <hr>

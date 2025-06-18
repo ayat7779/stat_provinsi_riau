@@ -21,7 +21,7 @@ if ($selected_year != '') {
     $sql .= " WHERE lk.tahun_lkpd = ?";
 }
 
-$sql .= " ORDER BY lk.tahun_lkpd, kc.kode_catatan ASC";
+$sql .= " ORDER BY lk.tahun_lkpd, kc.kode_catatan DESC";
 
 // Prepare the statement
 $stmt = $conn->prepare($sql);
@@ -97,9 +97,10 @@ if ($result->num_rows > 0):
                 <th>Tahun</th>
                 <th>Catatan</th>
                 <th>Uraian</th>
-                <th style="text-align: right;">Anggaran</th>
-                <th style="text-align: right;">Realisasi</th>
-                <th style="text-align: right;">Persentase</th>
+                <th style="text-align: center;">Anggaran</th>
+                <th style="text-align: center;">Realisasi</th>
+                <th style="text-align: center;">Persentase</th>
+                <th style="text-align: center;">Sisa Anggaran</th>
                 <th style="text-align: center;">Aksi</th> 
             </tr>
         </thead>
@@ -112,9 +113,10 @@ if ($result->num_rows > 0):
                     <td><?php echo htmlspecialchars($row['tahun_lkpd']); ?></td>
                     <td><?php echo htmlspecialchars($row['kode_catatan']); ?></td>
                     <td><?php echo htmlspecialchars($row['uraian']); ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] ?? 0, 2)); ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_realisasi'] ?? 0, 2)); ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['persentase'] ?? 0, 2)) . '%'; ?></td>
+                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] ?? 0, 2, ',', '.')); ?></td>
+                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_realisasi'] ?? 0, 2, ',', '.')); ?></td>
+                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['persentase'] ?? 0, 2, ',', '.')) . '%'; ?></td>
+                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] - $row['jumlah_realisasi'], 2, ',', '.')); ?></td>
                     <td class="actions">
                         <a href="update.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="edit">Edit</a>
                         <a href="delete.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="delete" 
