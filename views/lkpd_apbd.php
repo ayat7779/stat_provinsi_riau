@@ -114,7 +114,7 @@ if ($years_result->num_rows > 0) {
 }
 ?>
 
-<h2>Daftar LKPD APBD</h2>
+<h2>Lampiran I - LKPD</h2>
 
 <!-- Year Filter Form -->
 <form method="GET" action="">
