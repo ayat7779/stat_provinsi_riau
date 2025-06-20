@@ -154,7 +154,7 @@ if ($result->num_rows > 0):
             <tr>
                 <th style="display: none;">ID</th>
                 <th style="text-align: center;">Tahun</th>
-                <th style="text-align: center;">Kode</th>
+                <!-- <th style="text-align: center;">Kode</th> -->
                 <th style="text-align: center;">Uraian</th>
                 <th style="text-align: center;">Anggaran</th>
                 <th style="text-align: center;">Realisasi</th>
@@ -188,7 +188,7 @@ if ($result->num_rows > 0):
                 <tr>
                     <td style="display: none;"><?php echo htmlspecialchars($row['id_kode_level']); ?></td>
                     <td><?php echo $tahun_display; ?></td>
-                    <td><?php echo $kode_display; ?></td>
+                    <!-- <td><?php //echo $kode_display; ?></td> -->
                     <td><?php echo $uraian_display; ?></td>
                     <td style="text-align:right"><?php echo $anggaran_display; ?></td>
                     <td style="text-align:right"><?php echo $realisasi_display; ?></td>
