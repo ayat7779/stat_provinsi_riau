@@ -4,8 +4,8 @@ session_start();
 include '../config/database.php';
 include '../templates/header.php';
 
-$tahun_apbd_err = $id_kode_urut_err = $id_jenis_apbd_err = $jumlah_anggaran_err = "";
-$tahun_apbd = $id_kode_urut = $id_jenis_apbd = $jumlah_anggaran = "";
+$tahun_apbd_err = $id_kode_urut_err = $id_jenis_apbd_err = $jumlah_anggaran_err = $jumlah_perubahan_err = $kodeurut_err = "";
+$tahun_apbd = $id_kode_urut = $id_jenis_apbd = $jumlah_anggaran = $jumlah_perubahan = $kodeurut = "";
 
 $success_message = "";
 
@@ -51,7 +51,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!is_numeric(trim($_POST["id_kode_urut"]))) {
         $id_kode_urut_err = "<p class='error-message'>Pilihan nomor urut tidak valid.</p>";
     } else {
-        $id_kode_urut = (int)trim($_POST["id_kode_urut"]);
+        $sql = "SELECT id FROM kode_urut WHERE no_urut = ?";
+        if ($stmt = $conn->prepare($sql)) {
+            $stmt->bind_param("s", $param_kodeurut_check);
+            $param_kodeurut_check = trim($_POST["no_urut"]);
+
+            if ($stmt->execute()) {
+                $stmt->store_result();
+                if ($stmt->num_rows == 1) {
+                    $kodeurut_err = "<p class='error-message'>Kode urut ini sudah terdaftar.</p>";
+                } else {
+                    $kodeurut = trim($_POST["no_urut"]);
+                }
+            } else {
+                echo "<p class='error-message'>Ada yang salah saat memeriksa kode urut. Silakan coba lagi nanti.</p>";
+            }
+            $stmt->close();
+        }
     }
 
     // Validasi input jumlah anggaran
@@ -63,6 +79,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $jumlah_anggaran = (float)trim($_POST["jumlah_anggaran"]);
     }
 
+    // Validasi input jumlah perubahan
+    if (trim($_POST["jumlah_perubahan"]) === "") {
+        $jumlah_perubahan_err = "<p class='error-message'>Jumlah anggaran perubahan tidak boleh kosong.</p>";
+    } elseif (!is_numeric(trim($_POST["jumlah_perubahan"]))) {
+        $jumlah_perubahan_err = "<p class='error-message'>Jumlah anggaran perubahan harus berupa angka.</p>";
+    } else {
+        $jumlah_perubahan = (float)trim($_POST["jumlah_perubahan"]);
+    }
+
     // Validasi input jenis APBD
     if (empty(trim($_POST["id_jenis_apbd"]))) {
         $id_jenis_apbd_err = "<p class='error-message'>Jenis APBD tidak boleh kosong.</p>";
@@ -72,20 +97,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id_jenis_apbd = (int)trim($_POST["id_jenis_apbd"]);
     }
 
-    if (empty($tahun_apbd_err) && empty($id_kode_urut_err) && empty($jumlah_anggaran_err) && empty($id_jenis_apbd_err)) {
-        $sql = "INSERT INTO apbd_lampiran_1 (tahun, id_kode_urut, jumlah, id_jenis_apbd) VALUES (?, ?, ?, ?)";
+    if (empty($tahun_apbd_err) && empty($id_kode_urut_err) && empty($jumlah_anggaran_err) && empty($jumlah_perubahan_err) && empty($id_jenis_apbd_err)) {
+        $sql = "INSERT INTO apbd_lampiran_1 (tahun, id_kode_urut, jumlah_anggaran, jumlah_perubahan, id_jenis_apbd) VALUES (?, ?, ?, ?, ?)";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("sidi", $param_tahun_apbd, $param_id_kode_urut, $param_jumlah_anggaran, $param_id_jenis_apbd);
+            $stmt->bind_param("siddi", $param_tahun_apbd, $param_id_kode_urut, $param_jumlah_anggaran, $param_jumlah_perubahan, $param_id_jenis_apbd);
 
             $param_tahun_apbd = $tahun_apbd;
             $param_id_kode_urut = $id_kode_urut;
             $param_jumlah_anggaran = $jumlah_anggaran;
+            $param_jumlah_perubahan = $jumlah_perubahan;
             $param_id_jenis_apbd = $id_jenis_apbd;
 
             if ($stmt->execute()) {
                 $success_message = "Data berhasil disimpan!";
-                $tahun_apbd = $id_kode_urut = $jumlah_anggaran = $id_jenis_apbd = "";
+                $tahun_apbd = $id_kode_urut = $jumlah_anggaran = $jumlah_perubahan = $id_jenis_apbd = "";
             } else {
                 echo "<p class='error-message'>Ada yang salah saat menyimpan data. Silakan coba lagi nanti: </p>" . $stmt->error;
             }
@@ -133,6 +159,11 @@ if (!empty($success_message)): ?>
         <label>Jumlah Anggaran</label>
         <input type="text" name="jumlah_anggaran" value="<?php echo htmlspecialchars($jumlah_anggaran); ?>">
         <span class="error"><?php echo $jumlah_anggaran_err; ?></span>
+    </div>
+    <div>
+        <label>Jumlah Anggaran Perubahan</label>
+        <input type="text" name="jumlah_perubahan" value="<?php echo htmlspecialchars($jumlah_perubahan); ?>">
+        <span class="error"><?php echo $jumlah_perubahan_err; ?></span>
     </div>
     <div>
         <label>Jenis APBD</label>

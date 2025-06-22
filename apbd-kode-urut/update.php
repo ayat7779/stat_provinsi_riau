@@ -152,7 +152,7 @@ if (!empty($success_message)): ?>
     <script>
         setTimeout(function() {
             window.location.href = 'read.php';
-        }, 3000);
+        }, 1000);
     </script>
 <?php
 elseif (!empty($general_error_message)): ?>
