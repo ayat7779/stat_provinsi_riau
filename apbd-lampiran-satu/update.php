@@ -7,12 +7,13 @@ session_start();
 
 include '../config/database.php';
 
-$tahun_lkpd_err = $id_kode_catatan_err = $jumlah_anggaran_err = $jumlah_realisasi_err = "";
-$id = $tahun_lkpd = $id_kode_catatan = $jumlah_anggaran = $jumlah_realisasi = "";
+$tahun_apbd_err = $id_kode_urut_err = $id_jenis_apbd_err = $jumlah_anggaran_err = "";
+$tahun_apbd = $id_kode_urut = $id_jenis_apbd = $jumlah_anggaran = "";
 
 $success_message = "";
 $general_error_message = "";
 
+// Check if 'id' is set in GET or POST request
 if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
     $id = trim($_GET["id"]);
 } elseif (isset($_POST["id"]) && !empty(trim($_POST["id"]))) {
@@ -22,22 +23,26 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
     exit();
 }
 
+// Initialize variables for form fields
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    if (empty(trim($_POST["tahun_lkpd"]))) {
-        $tahun_lkpd_err = "<p class='error-message'>Tahun LKPD tidak boleh kosong.</p>";
+    //VALIDASI INPUT TAHUN APBD
+    if (empty(trim($_POST["tahun_apbd"]))) {
+        $tahun_apbd_err = "<p class='error-message'>Tahun APBD tidak boleh kosong.</p>";
     } else {
-        $tahun_lkpd = trim($_POST["tahun_lkpd"]);
+        $tahun_apbd = trim($_POST["tahun_apbd"]);
     }
 
-    if (trim($_POST["id_kode_catatan"]) === "") { 
-        $id_kode_catatan_err = "<p class='error-message'>Pilihan kode catatan tidak boleh kosong.</p>";
-    } elseif (!is_numeric(trim($_POST["id_kode_catatan"]))) {
-        $id_kode_catatan_err = "<p class='error-message'>Pilihan kode catatan tidak valid.</p>";
+    // Validasi input kode urut
+    if (trim($_POST["id_kode_urut"]) === "") { 
+        $id_kode_urut_err = "<p class='error-message'>Pilihan kode urut tidak boleh kosong.</p>";
+    } elseif (!is_numeric(trim($_POST["id_kode_urut"]))) {
+        $id_kode_urut_err = "<p class='error-message'>Pilihan kode urut tidak valid.</p>";
     } else {
-        $id_kode_catatan = (int)trim($_POST["id_kode_catatan"]);
+        $id_kode_urut = (int)trim($_POST["id_kode_urut"]);
     }
 
+    // Validasi input Jumlah Anggaran
     if (trim($_POST["jumlah_anggaran"]) === "") {
         $jumlah_anggaran_err = "<p class='error-message'>Jumlah anggaran tidak boleh kosong.</p>";
     } elseif (!is_numeric(trim($_POST["jumlah_anggaran"]))) {
@@ -46,26 +51,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $jumlah_anggaran = (float)trim($_POST["jumlah_anggaran"]);
     }
 
-    if (trim($_POST["jumlah_realisasi"]) === "") {
-        $jumlah_realisasi_err = "<p class='error-message'>Jumlah realisasi tidak boleh kosong.</p>";
-    } elseif (!is_numeric(trim($_POST["jumlah_realisasi"]))) {
-        $jumlah_realisasi_err = "<p class='error-message'>Jumlah realisasi harus berupa angka.</p>";
+    // Validasi input kode jenis
+    if (trim($_POST["id_jenis_apbd"]) === "") { 
+        $id_jenis_apbd_err = "<p class='error-message'>Pilihan Jenis APBD tidak boleh kosong.</p>";
+    } elseif (!is_numeric(trim($_POST["id_jenis_apbd"]))) {
+        $id_jenis_apbd_err = "<p class='error-message'>Pilihan kode jenis tidak valid.</p>";
     } else {
-        $jumlah_realisasi = (float)trim($_POST["jumlah_realisasi"]);
+        $id_jenis_apbd = (int)trim($_POST["id_jenis_apbd"]);
     }
 
-    if (empty($tahun_lkpd_err) && empty($id_kode_catatan_err) && empty($jumlah_anggaran_err) && empty($jumlah_realisasi_err)) {
-        $sql = "UPDATE lkpd_apbd_lampiran_1
-                SET tahun_lkpd = ?, id_kode_catatan = ?, jumlah_anggaran = ?, jumlah_realisasi = ?
+    if (empty($tahun_apbd_err) && empty($id_kode_urut_err) && empty($jumlah_anggaran_err) && empty($id_jenis_apbd_err)) {
+        $sql = "UPDATE apbd_lampiran_1
+                SET tahun = ?, id_kode_urut = ?, jumlah = ?, id_jenis_apbd = ?
                 WHERE id = ?";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("siddi", $param_tahun_lkpd, $param_id_kode_catatan, $param_jumlah_anggaran, $param_jumlah_realisasi, $id);
+            $stmt->bind_param("sidii", $param_tahun_apbd, $param_id_kode_urut, $param_jumlah_anggaran, $param_id_jenis_apbd, $id);
 
-            $param_tahun_lkpd = $tahun_lkpd;
-            $param_id_kode_catatan = $id_kode_catatan;
+            $param_tahun_apbd = $tahun_apbd;
+            $param_id_kode_urut = $id_kode_urut;
             $param_jumlah_anggaran = $jumlah_anggaran;
-            $param_jumlah_realisasi = $jumlah_realisasi;
+            $param_id_jenis_apbd = $id_jenis_apbd;
 
             if ($stmt->execute()) {
                 $success_message = "Data berhasil diupdate!";
@@ -83,34 +89,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
              $general_error_message = "Validasi gagal. Mohon periksa kembali input Anda.";
         }
         // Retain values if validation fails for the form
-        $tahun_lkpd = isset($_POST["tahun_lkpd"]) ? trim($_POST["tahun_lkpd"]) : '';
-        $id_kode_catatan = isset($_POST["id_kode_catatan"]) ? (int)trim($_POST["id_kode_catatan"]) : '';
+        $tahun_apbd = isset($_POST["tahun_apbd"]) ? trim($_POST["tahun_apbd"]) : '';
+        $id_kode_urut = isset($_POST["id_kode_urut"]) ? (int)trim($_POST["id_kode_urut"]) : '';
         $jumlah_anggaran = isset($_POST["jumlah_anggaran"]) ? (float)trim($_POST["jumlah_anggaran"]) : '';
-        $jumlah_realisasi = isset($_POST["jumlah_realisasi"]) ? (float)trim($_POST["jumlah_realisasi"]) : '';
+        $id_jenis_apbd = isset($_POST["id_jenis_apbd"]) ? (int)trim($_POST["id_jenis_apbd"]) : '';
     }
 }
 
 // Fetch `kode_catatan` for the dropdown (this part is correct for the dropdown)
-$kode_catatan_options = [];
-$sql_kode_catatan = "SELECT id, kode_catatan, uraian, id_kode_level 
-                     FROM kode_catatan
-                     WHERE id_kode_level = 3
-                     ORDER BY kode_catatan ASC";
-$result_kode_catatan = $conn->query($sql_kode_catatan);
+$kode_urut_options = [];
+$sql_kode_urut = "SELECT * FROM kode_urut WHERE id_kode_level = 3 ORDER BY no_urut ASC";
+$result_kode_urut = $conn->query($sql_kode_urut);
 
-if ($result_kode_catatan) {
-    while ($row = $result_kode_catatan->fetch_assoc()) {
-        $kode_catatan_options[] = $row;
+if ($result_kode_urut) {
+    while ($row = $result_kode_urut->fetch_assoc()) {
+        $kode_urut_options[] = $row;
     }
 } else {
     error_log("Error fetching kode_catatan options: " . $conn->error);
     $general_error_message = "Error: Gagal memuat pilihan Kode Catatan: " . $conn->error;
 }
 
+// Fetch `kode_jenis apbd` for the dropdown (this part is correct for the dropdown)
+$id_jenis_apbd_options = [];
+$sql_id_jenis_apbd = "SELECT * FROM jenis_apbd ORDER BY id ASC";
+$result_id_jenis_apbd = $conn->query($sql_id_jenis_apbd);
+
+if ($result_id_jenis_apbd) {
+    while ($row = $result_id_jenis_apbd->fetch_assoc()) {
+        $id_jenis_apbd_options[] = $row;
+    }
+} else {
+    error_log("Error fetching kode_catatan options: " . $conn->error);
+    $general_error_message = "Error: Gagal memuat pilihan Kode Catatan: " . $conn->error;
+}
+
+
 if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !empty($id))) {
-    $sql_fetch = "SELECT tahun_lkpd, id_kode_catatan, jumlah_anggaran, jumlah_realisasi
-                  FROM lkpd_apbd_lampiran_1
-                  WHERE id = ?";
+    
+    $sql_fetch = "SELECT * FROM apbd_lampiran_1 WHERE id = ?";
     if ($stmt_fetch = $conn->prepare($sql_fetch)) {
         $stmt_fetch->bind_param("i", $param_id_fetch);
         $param_id_fetch = $id;
@@ -120,10 +137,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !e
             if ($result_fetch->num_rows == 1) {
                 $row_fetch = $result_fetch->fetch_assoc();
                 if ($_SERVER["REQUEST_METHOD"] == "GET" || empty($tahun_lkpd)) {
-                    $tahun_lkpd = $row_fetch["tahun_lkpd"];
-                    $id_kode_catatan = $row_fetch["id_kode_catatan"];
-                    $jumlah_anggaran = $row_fetch["jumlah_anggaran"];
-                    $jumlah_realisasi = $row_fetch["jumlah_realisasi"];
+                    $tahun_apbd = $row_fetch["tahun"];
+                    $id_kode_urut = $row_fetch["id_kode_urut"];
+                    $jumlah_anggaran = $row_fetch["jumlah"];
+                    $id_jenis_apbd = $row_fetch["id_jenis_apbd"];
                 }
             } else {
                 header("location: ../index.php?error=data_not_found_on_reget");
@@ -143,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !e
 include '../templates/header.php';
 ?>
 
-<h2>Edit Data LKPD APBD Lampiran 1</h2>
+<h2>Edit Data APBD Lampiran 1</h2>
 
 <?php
 if (!empty($success_message)): ?>
@@ -153,7 +170,7 @@ if (!empty($success_message)): ?>
     <script>
         setTimeout(function() {
             window.location.href = 'read.php';
-        }, 3000);
+        }, 1000);
     </script>
 <?php
 elseif (!empty($general_error_message)): ?>
@@ -165,22 +182,22 @@ elseif (!empty($general_error_message)): ?>
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
     <input type="hidden" name="id" value="<?php echo htmlspecialchars($id); ?>">
     <div>
-        <label>Tahun LKPD</label>
-        <input type="text" name="tahun_lkpd" value="<?php echo htmlspecialchars($tahun_lkpd); ?>">
-        <span class="error"><?php echo $tahun_lkpd_err; ?></span>
+        <label>Tahun APBD</label>
+        <input type="text" name="tahun_apbd" value="<?php echo htmlspecialchars($tahun_apbd); ?>">
+        <span class="error"><?php echo $tahun_apbd_err; ?></span>
     </div>
     <div>
-        <label>Kode Catatan</label>
-        <select name="id_kode_catatan">
-            <option value="">-- Pilih Kode Catatan --</option>
-            <?php foreach ($kode_catatan_options as $option): ?>
+        <label>Kode Akun</label>
+        <select name="id_kode_urut">
+            <option value="">-- Pilih Akun --</option>
+            <?php foreach ($kode_urut_options as $option): ?>
                 <option value="<?php echo htmlspecialchars($option['id']); ?>"
-                    <?php echo ($id_kode_catatan == $option['id']) ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($option['kode_catatan'] . ' - ' . $option['uraian']); ?>
+                    <?php echo ($id_kode_urut == $option['id']) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($option['no_urut'] . ' - ' . $option['uraian']); ?>
                 </option>
             <?php endforeach; ?>
         </select>
-        <span class="error"><?php echo $id_kode_catatan_err; ?></span>
+        <span class="error"><?php echo $id_kode_urut_err; ?></span>
     </div>
     <div>
         <label>Jumlah Anggaran</label>
@@ -188,9 +205,17 @@ elseif (!empty($general_error_message)): ?>
         <span class="error"><?php echo $jumlah_anggaran_err; ?></span>
     </div>
     <div>
-        <label>Jumlah Realisasi</label>
-        <input type="text" name="jumlah_realisasi" value="<?php echo htmlspecialchars($jumlah_realisasi); ?>">
-        <span class="error"><?php echo $jumlah_realisasi_err; ?></span>
+        <label>Jenis APBD</label>
+        <select name="id_jenis_apbd">
+            <option value="">-- Pilih Jenis APBD --</option>
+            <?php foreach ($id_jenis_apbd_options as $options): ?>
+                <option value="<?php echo htmlspecialchars($options['id']); ?>"
+                    <?php echo ($id_jenis_apbd == $options['id']) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($options['uraian']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <span class="error"><?php echo $id_jenis_apbd_err; ?></span>
     </div>
     <div>
         <button type="submit">Update</button>

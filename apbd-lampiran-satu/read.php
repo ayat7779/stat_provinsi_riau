@@ -11,17 +11,18 @@ if (isset($_GET['tahun']) && $_GET['tahun'] != '') {
 }
 
 // Build the SQL query
-$sql = "SELECT lk.id, lk.tahun_lkpd, kc.kode_catatan, kc.uraian, lk.jumlah_anggaran, lk.jumlah_realisasi, (lk.jumlah_realisasi/lk.jumlah_anggaran)*100 AS persentase 
-        FROM lkpd_apbd_lampiran_1 AS lk
-        INNER JOIN kode_catatan AS kc 
-        ON lk.id_kode_catatan=kc.id";
+$sql = "SELECT a.id AS id, a.tahun AS tahun, b.no_urut AS kode, b.uraian AS nama_kode, jumlah, c.nama_level AS level, d.uraian AS jenis_apbd  
+        FROM apbd_lampiran_1 AS a 
+        LEFT JOIN kode_urut AS b ON a.id_kode_urut = b.id
+        LEFT JOIN kode_level AS c ON c.id = b.id_kode_level
+        LEFT JOIN jenis_apbd AS d ON d.id = a.id_jenis_apbd";
 
 // Add WHERE clause if a year is selected
 if ($selected_year != '') {
-    $sql .= " WHERE lk.tahun_lkpd = ?";
+    $sql .= " WHERE tahun = ?";
 }
 
-$sql .= " ORDER BY lk.tahun_lkpd, kc.kode_catatan DESC";
+$sql .= " ORDER BY tahun, kode";
 
 // Prepare the statement
 $stmt = $conn->prepare($sql);
@@ -40,17 +41,17 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 // --- Get unique years for the dropdown ---
-$years_query = "SELECT DISTINCT tahun_lkpd FROM lkpd_apbd_lampiran_1 ORDER BY tahun_lkpd DESC";
+$years_query = "SELECT DISTINCT tahun FROM apbd_lampiran_1 ORDER BY tahun DESC";
 $years_result = $conn->query($years_query);
 $available_years = [];
 if ($years_result->num_rows > 0) {
     while ($row = $years_result->fetch_assoc()) {
-        $available_years[] = $row['tahun_lkpd'];
+        $available_years[] = $row['tahun'];
     }
 }
 ?>
 
-<h2>Lampiran I - LKPD</h2>
+<h2>Lampiran I - APBD</h2>
 
 <div class="button-group">
     <button><a href="../index.php">Home</a></button>
@@ -95,12 +96,11 @@ if ($result->num_rows > 0):
             <tr>
                 <th style="display: none;">ID</th>
                 <th>Tahun</th>
-                <th>Catatan</th>
-                <th>Uraian</th>
+                <th>Kode</th>
+                <th>Nama Kode</th>
                 <th style="text-align: center;">Anggaran</th>
-                <th style="text-align: center;">Realisasi</th>
-                <th style="text-align: center;">Persentase</th>
-                <th style="text-align: center;">Sisa Anggaran</th>
+                <th style="text-align: center;">Level</th>
+                <th style="text-align: center;">Tahapan</th>
                 <th style="text-align: center;">Aksi</th> 
             </tr>
         </thead>
@@ -110,13 +110,12 @@ if ($result->num_rows > 0):
             ?>
                 <tr>
                     <td style="display: none;"><?php echo htmlspecialchars($row['id']); ?></td>
-                    <td><?php echo htmlspecialchars($row['tahun_lkpd']); ?></td>
-                    <td><?php echo htmlspecialchars($row['kode_catatan']); ?></td>
-                    <td><?php echo htmlspecialchars($row['uraian']); ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] ?? 0, 2, ',', '.')); ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_realisasi'] ?? 0, 2, ',', '.')); ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['persentase'] ?? 0, 2, ',', '.')) . '%'; ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] - $row['jumlah_realisasi'], 2, ',', '.')); ?></td>
+                    <td><?php echo htmlspecialchars($row['tahun']); ?></td>
+                    <td><?php echo htmlspecialchars($row['kode']); ?></td>
+                    <td><?php echo htmlspecialchars($row['nama_kode']); ?></td>
+                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah'] ?? 0, 2, ',', '.')); ?></td>
+                    <td><?php echo htmlspecialchars($row['level']); ?></td>
+                    <td><?php echo htmlspecialchars($row['jenis_apbd']); ?></td>
                     <td class="actions">
                         <a href="update.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="edit">Edit</a>
                         <a href="delete.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="delete" 

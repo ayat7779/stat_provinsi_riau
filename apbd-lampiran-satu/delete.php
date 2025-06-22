@@ -10,7 +10,7 @@ include '../config/database.php';
 if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
     $id = trim($_GET["id"]);
 
-    $sql = "DELETE FROM lkpd_apbd_lampiran_1 WHERE id = ?";
+    $sql = "DELETE FROM apbd_lampiran_1 WHERE id = ?";
 
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("i", $param_id);
