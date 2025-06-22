@@ -4,5 +4,6 @@
                     <a href="apbd-jenis/read.php">Jenis APBD</a>
                     <a href="level-kode/read.php">Level Kode</a>
                     <a href="lkpd-lampiran-satu/read.php">Lampiran 1 - LKPD</a>
+                    <a href="apbd-lampiran-satu/read.php">Lampiran 1 - APBD</a>
             </nav>
         <hr>
