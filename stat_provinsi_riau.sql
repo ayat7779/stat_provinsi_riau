@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 20 Jun 2025 pada 11.29
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.0.30
+-- Generation Time: Jun 22, 2025 at 04:24 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,21 +24,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `apbd_lampiran_1`
+-- Table structure for table `apbd_lampiran_1`
 --
 
 CREATE TABLE `apbd_lampiran_1` (
   `id` int(11) NOT NULL,
   `tahun` int(5) DEFAULT NULL,
   `id_kode_urut` int(5) DEFAULT NULL,
-  `jumlah` float DEFAULT NULL,
+  `jumlah_anggaran` float DEFAULT NULL,
+  `jumlah_perubahan` float NOT NULL,
   `id_jenis_apbd` int(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `jenis_apbd`
+-- Table structure for table `jenis_apbd`
 --
 
 CREATE TABLE `jenis_apbd` (
@@ -48,11 +49,10 @@ CREATE TABLE `jenis_apbd` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `jenis_apbd`
+-- Dumping data for table `jenis_apbd`
 --
 
 INSERT INTO `jenis_apbd` (`id`, `uraian`, `akronim`) VALUES
-(1, 'APBD INDUK', 'Induk'),
 (2, 'APBD Perubahan', 'APBDP'),
 (3, 'APBD Pergeseran Pertama', 'APBDP01'),
 (4, 'APBD Pergeseran Kedua', 'APBDP02'),
@@ -61,7 +61,7 @@ INSERT INTO `jenis_apbd` (`id`, `uraian`, `akronim`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kode_catatan`
+-- Table structure for table `kode_catatan`
 --
 
 CREATE TABLE `kode_catatan` (
@@ -72,7 +72,7 @@ CREATE TABLE `kode_catatan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `kode_catatan`
+-- Dumping data for table `kode_catatan`
 --
 
 INSERT INTO `kode_catatan` (`id`, `kode_catatan`, `uraian`, `id_kode_level`) VALUES
@@ -146,12 +146,15 @@ INSERT INTO `kode_catatan` (`id`, `kode_catatan`, `uraian`, `id_kode_level`) VAL
 (72, '2.1.7.', 'Belanja Bantuan Keuangan', 3),
 (73, '4.1.7.', 'Penerimaan Kembali Pemberian Pinjaman Investasi Non Permanen/Dana Bergulir', 3),
 (74, '4.2.4.', 'Pembayaran Pokok Pinjaman Dalam Negeri - Pemerintah Pusat', 3),
-(75, '4.2.1.', 'Pembentukan Dana Cadangan', 3);
+(75, '4.2.1.', 'Pembentukan Dana Cadangan', 3),
+(76, '4.2.5.', 'Pembayaran Kekurangan Belanja Bagi Hasil', 3),
+(77, '4.2.6.', 'Pembayaran Pokok Hutang Kepada Pihak Ketiga', 3),
+(78, '4.2.7.', 'Piutang Tuntutan Ganti Rugi', 3);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kode_level`
+-- Table structure for table `kode_level`
 --
 
 CREATE TABLE `kode_level` (
@@ -161,7 +164,7 @@ CREATE TABLE `kode_level` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `kode_level`
+-- Dumping data for table `kode_level`
 --
 
 INSERT INTO `kode_level` (`id`, `nama_level`, `akronim`) VALUES
@@ -172,54 +175,53 @@ INSERT INTO `kode_level` (`id`, `nama_level`, `akronim`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kode_urut`
+-- Table structure for table `kode_urut`
 --
 
 CREATE TABLE `kode_urut` (
   `id` int(11) NOT NULL,
-  `no_urut` varchar(6) DEFAULT NULL,
+  `no_urut` varchar(11) DEFAULT NULL,
   `uraian` varchar(255) DEFAULT NULL,
   `id_kode_level` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `kode_urut`
+-- Dumping data for table `kode_urut`
 --
 
 INSERT INTO `kode_urut` (`id`, `no_urut`, `uraian`, `id_kode_level`) VALUES
 (1, '4.', 'PENDAPATAN DAERAH', 1),
 (2, '4.1.', 'PENDAPATAN ASLI DAERAH', 2),
-(3, '4.1.1.', 'Pajak Daerah', 3),
-(4, '4.1.2.', 'Retribusi Daerah', 3),
-(5, '4.1.3.', 'Hasil Pengelolaan Kekayaan Daerah Yang Dipisahkan', 3),
-(6, '4.1.4.', 'Lain-lain Pendapatan Asli Daerah Yang Sah', 3),
-(7, '4.2.', 'DANA PERIMBANGAN', 2),
-(8, '4.2.1.', 'Bagi Hasil Pajak/Bagi Hasil Bukan Pajak', 3),
-(9, '4.2.2.', 'Dana Alokasi Umum', 3),
-(10, '4.2.3.', 'Dana Alokasi Khusus', 3),
+(3, '4.1.01.', 'Pajak Daerah', 3),
+(4, '4.1.02.', 'Retribusi Daerah', 3),
+(5, '4.1.03.', 'Hasil Pengelolaan Kekayaan Daerah Yang Dipisahkan', 3),
+(6, '4.1.04.', 'Lain-lain PAD Yang Sah', 3),
+(7, '4.2.', 'PENDAPATAN TRANSFER', 2),
+(8, '4.2.01.', 'Pendapatan Transfer Pemerintah Pusat', 3),
 (11, '4.3.', 'LAIN-LAIN PENDAPATAN DAERAH YANG SAH', 2),
-(12, '4.3.1.', 'Pendapatan Hibah', 3),
-(15, '4.3.4.', 'Dana Penyesuaian dan Otonomi Khusus', 3),
-(16, '5.', 'BELANJA DAERAH', 1),
-(17, '5.1.', 'BELANJA TIDAK LANGSUNG', 2),
-(18, '5.1.1.', 'Belanja Pegawai', 3),
-(21, '5.1.4.', 'Belanja Hibah', 3),
-(22, '5.1.6.', 'Belanja Bagi Hasil Kepada Provinsi/Kabupaten/Kota dan Pemerintahan Desa', 3),
-(23, '5.1.7.', 'Belanja Bantuan Keuangan Kepada Provinsi/Kabupaten/Kota dan Pemerintahan Desa', 3),
-(24, '5.1.8.', 'Belanja Tidak Terduga', 3),
-(25, '5.2.', 'BELANJA LANGSUNG', 2),
-(26, '5.2.1.', 'Belanja Pegawai', 3),
-(27, '5.2.2.', 'Belanja Barang dan Jasa', 3),
-(28, '5.2.3.', 'Belanja Modal', 3),
+(12, '4.3.01.', 'Pendapatan Hibah', 3),
+(16, '5.', 'BELANJA', 1),
+(17, '5.1.', 'BELANJA OPERASI', 2),
+(18, '5.1.01.', 'Belanja Pegawai', 3),
+(21, '5.1.05.', 'Belanja Hibah', 3),
+(22, '5.1.06.', 'Belanja Bantuan Sosial', 3),
+(25, '5.2.', 'BELANJA MODAL', 2),
+(26, '5.2.01.', 'Belanja Modal Tanah', 3),
+(27, '5.1.02.', 'Belanja Barang dan Jasa', 3),
+(28, '5.2.02.', 'Belanja Modal Peralatan dan Mesin', 3),
 (30, '6.', 'PEMBIAYAAN DAERAH', 1),
 (31, '6.1.', 'Penerimaan Pembiayaan Daerah', 2),
 (32, '6.1.1.', 'Sisa Lebih Perhitungan Anggaran Daerah Tahun Sebelumnya', 3),
-(33, '6.1.5.', 'Penerimaan Kembali Pemberian Pinjaman', 3);
+(33, '6.1.5.', 'Penerimaan Kembali Pemberian Pinjaman', 3),
+(48, '5.2.03.', 'Belanja Modal Gedung dan Bangunan', 3),
+(49, '5.2.04.', 'Belanja Modal Jalan, Jaringan, dan Irigasi', 3),
+(50, '5.2.05.', 'Belanja Modal Aset Tetap Lainnya', 3),
+(51, '5.2.06.', 'Belanja Modal Aset Lainnya', 3);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `lkpd_apbd_lampiran_1`
+-- Table structure for table `lkpd_apbd_lampiran_1`
 --
 
 CREATE TABLE `lkpd_apbd_lampiran_1` (
@@ -231,7 +233,7 @@ CREATE TABLE `lkpd_apbd_lampiran_1` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `lkpd_apbd_lampiran_1`
+-- Dumping data for table `lkpd_apbd_lampiran_1`
 --
 
 INSERT INTO `lkpd_apbd_lampiran_1` (`id`, `tahun_lkpd`, `id_kode_catatan`, `jumlah_anggaran`, `jumlah_realisasi`) VALUES
@@ -595,87 +597,107 @@ INSERT INTO `lkpd_apbd_lampiran_1` (`id`, `tahun_lkpd`, `id_kode_catatan`, `juml
 (372, 2010, 13, 58869157000.00, 58869157000.00),
 (373, 2010, 55, 22368500000.00, 22368500000.00),
 (374, 2010, 21, 21044175000.00, 9507000000.00),
-(375, 2010, 24, 1070314354465.17, 945974032438.35);
+(375, 2010, 24, 1070314354465.17, 945974032438.35),
+(377, 2010, 25, 882439925439.48, 761648598184.93),
+(378, 2010, 27, 15272310000.00, 14603881000.00),
+(379, 2010, 28, 148675000000.00, 130349256608.00),
+(380, 2010, 29, 216582000000.00, 212587242317.00),
+(381, 2010, 72, 43200000000.00, 41888000000.00),
+(382, 2010, 31, 45671927700.00, 28357928782.00),
+(383, 2010, 32, 148989233997.00, 127398454599.70),
+(384, 2010, 33, 460547265292.45, 418193646759.85),
+(385, 2010, 34, 726465493875.00, 652723412799.00),
+(386, 2010, 35, 32175049654.22, 6448992300.00),
+(387, 2010, 36, 7234804250.00, 5624450500.00),
+(388, 2010, 38, 10000000000.00, 1000000000.00),
+(389, 2010, 68, 458956875000.00, 443947620091.00),
+(390, 2010, 69, 908419000.00, 660955000.00),
+(391, 2010, 50, 114587470524.86, 114037387991.86),
+(392, 2010, 73, 0.00, 76394637.00),
+(393, 2010, 75, 100000000000.00, 124154627577.00),
+(394, 2010, 59, 87000000000.00, 86000000000.00),
+(395, 2010, 74, 7000000000.00, 6336302687.72),
+(396, 2010, 78, 0.00, 5938669880.00);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `apbd_lampiran_1`
+-- Indexes for table `apbd_lampiran_1`
 --
 ALTER TABLE `apbd_lampiran_1`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `jenis_apbd`
+-- Indexes for table `jenis_apbd`
 --
 ALTER TABLE `jenis_apbd`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `kode_catatan`
+-- Indexes for table `kode_catatan`
 --
 ALTER TABLE `kode_catatan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `kode_level`
+-- Indexes for table `kode_level`
 --
 ALTER TABLE `kode_level`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `kode_urut`
+-- Indexes for table `kode_urut`
 --
 ALTER TABLE `kode_urut`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `lkpd_apbd_lampiran_1`
+-- Indexes for table `lkpd_apbd_lampiran_1`
 --
 ALTER TABLE `lkpd_apbd_lampiran_1`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `apbd_lampiran_1`
+-- AUTO_INCREMENT for table `apbd_lampiran_1`
 --
 ALTER TABLE `apbd_lampiran_1`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT untuk tabel `jenis_apbd`
+-- AUTO_INCREMENT for table `jenis_apbd`
 --
 ALTER TABLE `jenis_apbd`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT untuk tabel `kode_catatan`
+-- AUTO_INCREMENT for table `kode_catatan`
 --
 ALTER TABLE `kode_catatan`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
--- AUTO_INCREMENT untuk tabel `kode_level`
+-- AUTO_INCREMENT for table `kode_level`
 --
 ALTER TABLE `kode_level`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT untuk tabel `kode_urut`
+-- AUTO_INCREMENT for table `kode_urut`
 --
 ALTER TABLE `kode_urut`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
--- AUTO_INCREMENT untuk tabel `lkpd_apbd_lampiran_1`
+-- AUTO_INCREMENT for table `lkpd_apbd_lampiran_1`
 --
 ALTER TABLE `lkpd_apbd_lampiran_1`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=376;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=397;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
