@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 22, 2025 at 04:24 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Waktu pembuatan: 23 Jun 2025 pada 08.34
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,22 +24,48 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `apbd_lampiran_1`
+-- Struktur dari tabel `apbd_lampiran_1`
 --
 
 CREATE TABLE `apbd_lampiran_1` (
   `id` int(11) NOT NULL,
   `tahun` int(5) DEFAULT NULL,
   `id_kode_urut` int(5) DEFAULT NULL,
-  `jumlah_anggaran` float DEFAULT NULL,
-  `jumlah_perubahan` float NOT NULL,
+  `jumlah_anggaran` decimal(18,2) DEFAULT NULL,
+  `jumlah_perubahan` decimal(18,2) DEFAULT NULL,
   `id_jenis_apbd` int(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `apbd_lampiran_1`
+--
+
+INSERT INTO `apbd_lampiran_1` (`id`, `tahun`, `id_kode_urut`, `jumlah_anggaran`, `jumlah_perubahan`, `id_jenis_apbd`) VALUES
+(15, 2024, 3, 4382173075085.00, 4534110558510.00, 2),
+(16, 2024, 4, 25970361800.00, 16924726800.00, 2),
+(17, 2024, 5, 1097539778218.00, 1693001556211.00, 2),
+(18, 2024, 6, 479254329491.00, 538889285285.00, 2),
+(19, 2024, 8, 4069181213000.00, 4329608655466.00, 2),
+(20, 2024, 12, 7780040000.00, 8939052000.00, 2),
+(21, 2024, 18, 2945575346348.00, 3146292156105.16, 2),
+(22, 2024, 27, 2956052133050.00, 3087686188788.49, 2),
+(23, 2024, 21, 567889708670.00, 575176581269.00, 2),
+(24, 2024, 22, 44130184000.00, 22622182000.00, 2),
+(25, 2024, 26, 20700000000.00, 4426205871.00, 2),
+(26, 2024, 28, 310377810166.00, 356274437420.00, 2),
+(27, 2024, 48, 383327474779.00, 379606494578.00, 2),
+(28, 2024, 49, 1460398466983.00, 1673462309033.00, 2),
+(29, 2024, 50, 36614830000.00, 35891442600.00, 2),
+(30, 2024, 51, 267734040.00, 272734040.00, 2),
+(31, 2024, 31, 40075754136.00, 15000000000.00, 2),
+(32, 2024, 33, 1794967836279.00, 1459463088634.35, 2),
+(33, 2024, 52, 460003379000.00, 434411379000.00, 2),
+(34, 2024, 55, 958481859857.00, 69111365067.00, 2);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jenis_apbd`
+-- Struktur dari tabel `jenis_apbd`
 --
 
 CREATE TABLE `jenis_apbd` (
@@ -49,7 +75,7 @@ CREATE TABLE `jenis_apbd` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `jenis_apbd`
+-- Dumping data untuk tabel `jenis_apbd`
 --
 
 INSERT INTO `jenis_apbd` (`id`, `uraian`, `akronim`) VALUES
@@ -61,7 +87,7 @@ INSERT INTO `jenis_apbd` (`id`, `uraian`, `akronim`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kode_catatan`
+-- Struktur dari tabel `kode_catatan`
 --
 
 CREATE TABLE `kode_catatan` (
@@ -72,7 +98,7 @@ CREATE TABLE `kode_catatan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `kode_catatan`
+-- Dumping data untuk tabel `kode_catatan`
 --
 
 INSERT INTO `kode_catatan` (`id`, `kode_catatan`, `uraian`, `id_kode_level`) VALUES
@@ -154,7 +180,7 @@ INSERT INTO `kode_catatan` (`id`, `kode_catatan`, `uraian`, `id_kode_level`) VAL
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kode_level`
+-- Struktur dari tabel `kode_level`
 --
 
 CREATE TABLE `kode_level` (
@@ -164,7 +190,7 @@ CREATE TABLE `kode_level` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `kode_level`
+-- Dumping data untuk tabel `kode_level`
 --
 
 INSERT INTO `kode_level` (`id`, `nama_level`, `akronim`) VALUES
@@ -175,7 +201,7 @@ INSERT INTO `kode_level` (`id`, `nama_level`, `akronim`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kode_urut`
+-- Struktur dari tabel `kode_urut`
 --
 
 CREATE TABLE `kode_urut` (
@@ -186,7 +212,7 @@ CREATE TABLE `kode_urut` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `kode_urut`
+-- Dumping data untuk tabel `kode_urut`
 --
 
 INSERT INTO `kode_urut` (`id`, `no_urut`, `uraian`, `id_kode_level`) VALUES
@@ -209,19 +235,26 @@ INSERT INTO `kode_urut` (`id`, `no_urut`, `uraian`, `id_kode_level`) VALUES
 (26, '5.2.01.', 'Belanja Modal Tanah', 3),
 (27, '5.1.02.', 'Belanja Barang dan Jasa', 3),
 (28, '5.2.02.', 'Belanja Modal Peralatan dan Mesin', 3),
-(30, '6.', 'PEMBIAYAAN DAERAH', 1),
-(31, '6.1.', 'Penerimaan Pembiayaan Daerah', 2),
-(32, '6.1.1.', 'Sisa Lebih Perhitungan Anggaran Daerah Tahun Sebelumnya', 3),
-(33, '6.1.5.', 'Penerimaan Kembali Pemberian Pinjaman', 3),
+(30, '5.3.', 'BELANJA TIDAK TERDUGA', 2),
+(31, '5.3.01.', 'Belanja Tidak Terduga', 3),
+(32, '5.4.', 'BELANJA TRANSFER', 2),
+(33, '5.4.01.', 'Belanja Bagi Hasil', 3),
 (48, '5.2.03.', 'Belanja Modal Gedung dan Bangunan', 3),
 (49, '5.2.04.', 'Belanja Modal Jalan, Jaringan, dan Irigasi', 3),
 (50, '5.2.05.', 'Belanja Modal Aset Tetap Lainnya', 3),
-(51, '5.2.06.', 'Belanja Modal Aset Lainnya', 3);
+(51, '5.2.06.', 'Belanja Modal Aset Lainnya', 3),
+(52, '5.4.02.', 'Belanja Bantuan Keuangan', 3),
+(53, '6.', 'PEMBIAYAAN DAERAH', 1),
+(54, '6.1.', 'PENERIMAAN PEMBIAYAAN', 2),
+(55, '6.1.01.', 'Sisa Lebih Perhitungan Anggaran Tahun Sebelumnya', 3),
+(56, '6.4.', 'Sisa Lebih Pembiayaan Anggaran Daerah Tahun Berkenaan (SILPA)', 2),
+(57, '5.5.', 'SURPLUS/DEFISIT', 2),
+(58, '6.3.', 'Pembiayaan Neto', 2);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lkpd_apbd_lampiran_1`
+-- Struktur dari tabel `lkpd_apbd_lampiran_1`
 --
 
 CREATE TABLE `lkpd_apbd_lampiran_1` (
@@ -233,7 +266,7 @@ CREATE TABLE `lkpd_apbd_lampiran_1` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `lkpd_apbd_lampiran_1`
+-- Dumping data untuk tabel `lkpd_apbd_lampiran_1`
 --
 
 INSERT INTO `lkpd_apbd_lampiran_1` (`id`, `tahun_lkpd`, `id_kode_catatan`, `jumlah_anggaran`, `jumlah_realisasi`) VALUES
@@ -624,77 +657,77 @@ INSERT INTO `lkpd_apbd_lampiran_1` (`id`, `tahun_lkpd`, `id_kode_catatan`, `juml
 --
 
 --
--- Indexes for table `apbd_lampiran_1`
+-- Indeks untuk tabel `apbd_lampiran_1`
 --
 ALTER TABLE `apbd_lampiran_1`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `jenis_apbd`
+-- Indeks untuk tabel `jenis_apbd`
 --
 ALTER TABLE `jenis_apbd`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `kode_catatan`
+-- Indeks untuk tabel `kode_catatan`
 --
 ALTER TABLE `kode_catatan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `kode_level`
+-- Indeks untuk tabel `kode_level`
 --
 ALTER TABLE `kode_level`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `kode_urut`
+-- Indeks untuk tabel `kode_urut`
 --
 ALTER TABLE `kode_urut`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `lkpd_apbd_lampiran_1`
+-- Indeks untuk tabel `lkpd_apbd_lampiran_1`
 --
 ALTER TABLE `lkpd_apbd_lampiran_1`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `apbd_lampiran_1`
+-- AUTO_INCREMENT untuk tabel `apbd_lampiran_1`
 --
 ALTER TABLE `apbd_lampiran_1`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
--- AUTO_INCREMENT for table `jenis_apbd`
+-- AUTO_INCREMENT untuk tabel `jenis_apbd`
 --
 ALTER TABLE `jenis_apbd`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `kode_catatan`
+-- AUTO_INCREMENT untuk tabel `kode_catatan`
 --
 ALTER TABLE `kode_catatan`
   MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
--- AUTO_INCREMENT for table `kode_level`
+-- AUTO_INCREMENT untuk tabel `kode_level`
 --
 ALTER TABLE `kode_level`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `kode_urut`
+-- AUTO_INCREMENT untuk tabel `kode_urut`
 --
 ALTER TABLE `kode_urut`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
--- AUTO_INCREMENT for table `lkpd_apbd_lampiran_1`
+-- AUTO_INCREMENT untuk tabel `lkpd_apbd_lampiran_1`
 --
 ALTER TABLE `lkpd_apbd_lampiran_1`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=397;
