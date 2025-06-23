@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $levels = [];
-$sql_levels_reget = "SELECT id, nama_level FROM kode_level ORDER BY nama_level ASC";
+$sql_levels_reget = "SELECT id, nama_level FROM kode_level ORDER BY id ASC";
 $result_levels_reget = $conn->query($sql_levels_reget);
 
 if ($result_levels_reget) {

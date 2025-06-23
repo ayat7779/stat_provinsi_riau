@@ -101,7 +101,6 @@ if ($result->num_rows > 0):
                 <th style="text-align: center;">Anggaran Murni</th>
                 <th style="text-align: center;">Anggaran Perubahan</th>
                 <th style="text-align: center;">Selisih</th>
-                <th style="text-align: center;">Level</th>
                 <th style="text-align: center;">Tahapan</th>
                 <th style="text-align: center;">Aksi</th> 
             </tr>
@@ -118,7 +117,6 @@ if ($result->num_rows > 0):
                     <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] ?? 0, 2, ',', '.')); ?></td>
                     <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_perubahan'] ?? 0, 2, ',', '.')); ?></td>
                     <td style="text-align:right"><?php echo htmlspecialchars(number_format(($row['jumlah_perubahan']-$row['jumlah_anggaran']) ?? 0, 2, ',', '.')); ?></td>
-                    <td><?php echo htmlspecialchars($row['level']); ?></td>
                     <td><?php echo htmlspecialchars($row['jenis_apbd']); ?></td>
                     <td class="actions">
                         <a href="update.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="edit">Edit</a>

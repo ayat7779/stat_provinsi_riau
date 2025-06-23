@@ -51,23 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!is_numeric(trim($_POST["id_kode_urut"]))) {
         $id_kode_urut_err = "<p class='error-message'>Pilihan nomor urut tidak valid.</p>";
     } else {
-        $sql = "SELECT id FROM kode_urut WHERE no_urut = ?";
-        if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("s", $param_kodeurut_check);
-            $param_kodeurut_check = trim($_POST["no_urut"]);
-
-            if ($stmt->execute()) {
-                $stmt->store_result();
-                if ($stmt->num_rows == 1) {
-                    $kodeurut_err = "<p class='error-message'>Kode urut ini sudah terdaftar.</p>";
-                } else {
-                    $kodeurut = trim($_POST["no_urut"]);
-                }
-            } else {
-                echo "<p class='error-message'>Ada yang salah saat memeriksa kode urut. Silakan coba lagi nanti.</p>";
-            }
-            $stmt->close();
-        }
+        $id_kode_urut = (int)trim($_POST["id_kode_urut"]);
     }
 
     // Validasi input jumlah anggaran
@@ -131,7 +115,7 @@ if (!empty($success_message)): ?>
     <script>
         setTimeout(function() {
             window.location.href = 'read.php';
-        }, 1500);
+        }, 1000);
     </script>
 <?php endif; ?>
 
