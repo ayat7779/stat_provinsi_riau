@@ -3,52 +3,69 @@ include 'config/database.php';
 
 $selected_year = '';
 // Check if a year is selected from the dropdown
-if (isset($_GET['tahun']) && $_GET['tahun'] != '') {
-    $selected_year = $_GET['tahun'];
+if (isset($_GET['tahun_lkpd']) && $_GET['tahun_lkpd'] != '') {
+    $selected_year = $_GET['tahun_lkpd'];
 }
 
-$sql = "SELECT kc.id_kode_level, tahun_lkpd, kode, uraian, anggaran, realisasi, CASE WHEN a.anggaran = 0 THEN 0 ELSE (a.anggaran-a.realisasi) END AS sisa_anggaran, CASE WHEN a.anggaran = 0 THEN 0 ELSE (a.realisasi/a.anggaran)*100 END AS persentase FROM (
-		    SELECT tahun_lkpd, LEFT(kode_catatan,2) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
+$sql = "SELECT kc.id_kode_level, tahun_lkpd, kode, uraian, anggaran, realisasi, 
+CASE WHEN a.anggaran = 0 THEN 0 ELSE (a.anggaran-a.realisasi) END AS sisa_anggaran, 
+CASE WHEN a.anggaran = 0 THEN 0 ELSE (a.realisasi/a.anggaran)*100 END AS persentase 
+FROM (
+		    SELECT tahun_lkpd, LEFT(kode_catatan,2) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi 
+            FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
-		    SELECT tahun_lkpd, LEFT(kode_catatan,4) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
+		    SELECT tahun_lkpd, LEFT(kode_catatan,4) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  
+            FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
 		    GROUP BY tahun_lkpd, kode 
 		    UNION ALL
-		    SELECT tahun_lkpd, kode_catatan AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
+		    SELECT tahun_lkpd, kode_catatan AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  
+            FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
             SELECT tahun_lkpd, '333330' AS kode, 
-		           SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_anggaran ELSE 0 END)+SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
-		           SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_realisasi ELSE 0 END)+SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_anggaran ELSE 0 END)
+            +SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_realisasi ELSE 0 END)
+            +SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
 		    FROM lkpd_apbd_lampiran_1 la 
 		    INNER JOIN kode_catatan kc 
 		    ON la.`id_kode_catatan`=kc.`id`
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
-		    SELECT tahun_lkpd, 
-		           '333331' AS kode, 
-		           SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN la.jumlah_anggaran ELSE 0 END)-(SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_anggaran ELSE 0 END)+SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_anggaran ELSE 0 END)) AS anggaran, 
-		           SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN la.jumlah_realisasi ELSE 0 END)-(SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_realisasi ELSE 0 END)+SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_realisasi ELSE 0 END)) AS realisasi 
+		    SELECT tahun_lkpd, '333331' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN la.jumlah_anggaran ELSE 0 END)-
+            (SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_anggaran ELSE 0 END)+
+            SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_anggaran ELSE 0 END)) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN la.jumlah_realisasi ELSE 0 END)-
+            (SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_realisasi ELSE 0 END)+
+            SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_realisasi ELSE 0 END)) AS realisasi 
 		    FROM lkpd_apbd_lampiran_1 la 
 		    INNER JOIN kode_catatan kc 
 		    ON la.`id_kode_catatan`=kc.`id`
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
-		    SELECT tahun_lkpd, 
-		           '444441' AS kode,
-			   (SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN la.jumlah_anggaran ELSE 0 END)-(SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_anggaran ELSE 0 END)+SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_anggaran ELSE 0 END)))+ 
-		           (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_anggaran ELSE 0 END)-SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_anggaran ELSE 0 END)) AS anggaran,
-		           (SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN la.jumlah_realisasi ELSE 0 END)-(SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_realisasi ELSE 0 END)+SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_realisasi ELSE 0 END)))+
-		           (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_realisasi ELSE 0 END)-SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_realisasi ELSE 0 END)) AS realisasi 
+		    SELECT tahun_lkpd, '444441' AS kode,
+			(SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN la.jumlah_anggaran ELSE 0 END)-
+            (SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_anggaran ELSE 0 END)+
+            SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_anggaran ELSE 0 END)))+ 
+		    (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_anggaran ELSE 0 END)-
+            SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_anggaran ELSE 0 END)) AS anggaran,
+		    (SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN la.jumlah_realisasi ELSE 0 END)-
+            (SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_realisasi ELSE 0 END)+
+            SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_realisasi ELSE 0 END)))+
+		    (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_realisasi ELSE 0 END)-
+            SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_realisasi ELSE 0 END)) AS realisasi 
 		    FROM lkpd_apbd_lampiran_1 la 
 		    INNER JOIN kode_catatan kc 
 		    ON la.`id_kode_catatan`=kc.`id`
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
-		    SELECT tahun_lkpd, 
-		           '444440' AS kode,
-		           (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_anggaran ELSE 0 END)-SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_anggaran ELSE 0 END)) AS anggaran,
-		           (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_realisasi ELSE 0 END)-SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_realisasi ELSE 0 END)) AS realisasi 
+		    SELECT tahun_lkpd, '444440' AS kode,
+		    (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_anggaran ELSE 0 END)-
+            SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_anggaran ELSE 0 END)) AS anggaran,
+		    (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_realisasi ELSE 0 END)-
+            SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_realisasi ELSE 0 END)) AS realisasi 
 		    FROM lkpd_apbd_lampiran_1 la 
 		    INNER JOIN kode_catatan kc 
 		    ON la.`id_kode_catatan`=kc.`id`
@@ -95,8 +112,8 @@ if ($years_result->num_rows > 0) {
 
 <!-- Year Filter Form -->
 <form method="GET" action="">
-    <label for="tahun">Filter Tahun:</label>
-    <select name="tahun" id="tahun" onchange="this.form.submit()">
+    <label for="tahun_lkpd">Filter Tahun:</label>
+    <select name="tahun_lkpd" id="tahun_lkpd" onchange="this.form.submit()">
         <option value="">-- Semua Tahun --</option>
         <?php foreach ($available_years as $year): ?>
             <option value="<?php echo htmlspecialchars($year); ?>" 

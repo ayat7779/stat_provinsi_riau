@@ -1,5 +1,5 @@
 <?php
-include 'config/database.php';
+//include 'config/database.php';
 
 $selected_year = '';
 // Check if a year is selected from the dropdown
