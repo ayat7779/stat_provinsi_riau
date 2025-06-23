@@ -120,13 +120,28 @@ if (!empty($success_message)): ?>
 <?php endif; ?>
 
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+    <div class="custom-select-wrapper">
+        <label for="my-dropdown-custom">Jenis APBD</label>
+        <div class="custom-select-wrapper">
+            <select name="id_jenis_apbd">
+                <option value="">-- Pilih Jenis --</option>
+                <?php foreach ($kdjenisapbd as $jenis): ?>
+                    <option value="<?php echo htmlspecialchars($jenis['id']); ?>"
+                        <?php echo ($id_jenis_apbd == $jenis['id']) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($jenis['uraian']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <span class="error"><?php echo $id_jenis_apbd_err; ?></span>
+    </div>
     <div>
         <label>Tahun APBD</label>
         <input type="text" name="tahun_apbd" value="<?php echo htmlspecialchars($tahun_apbd); ?>">
         <span class="error"><?php echo $tahun_apbd_err; ?></span>
     </div>
     <div>
-        <label>Uraian</label>
+        <label for="custom-select-wrapper">Uraian</label>
         <select name="id_kode_urut">
             <option value="">-- Pilih Akun --</option>
             <?php foreach ($kdurut as $urut): ?>
@@ -148,19 +163,6 @@ if (!empty($success_message)): ?>
         <label>Jumlah Anggaran Perubahan</label>
         <input type="text" name="jumlah_perubahan" value="<?php echo htmlspecialchars($jumlah_perubahan); ?>">
         <span class="error"><?php echo $jumlah_perubahan_err; ?></span>
-    </div>
-    <div>
-        <label>Jenis APBD</label>
-        <select name="id_jenis_apbd">
-            <option value="">-- Pilih Jenis --</option>
-            <?php foreach ($kdjenisapbd as $jenis): ?>
-                <option value="<?php echo htmlspecialchars($jenis['id']); ?>"
-                    <?php echo ($id_jenis_apbd == $jenis['id']) ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($jenis['uraian']); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <span class="error"><?php echo $id_jenis_apbd_err; ?></span>
     </div>
     <div>
         <button type="submit">Simpan</button>

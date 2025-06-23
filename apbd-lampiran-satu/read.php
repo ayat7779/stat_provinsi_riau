@@ -10,19 +10,19 @@ if (isset($_GET['tahun']) && $_GET['tahun'] != '') {
     $selected_year = $_GET['tahun'];
 }
 
+$where_clause = "";
+if ($selected_year != '') {
+    $where_clause = " WHERE tahun= ?";
+}
+
 // Build the SQL query
-$sql = "SELECT a.id AS id, a.tahun AS tahun, b.no_urut AS kode, b.uraian AS nama_kode, jumlah_anggaran, jumlah_perubahan, c.nama_level AS level, d.uraian AS jenis_apbd  
+$sql = "SELECT a.id AS id, a.tahun AS tahun, b.no_urut AS kode, b.uraian AS nama_kode, jumlah_anggaran, jumlah_perubahan, c.nama_level AS level, d.akronim AS jenis_apbd  
         FROM apbd_lampiran_1 AS a 
         LEFT JOIN kode_urut AS b ON a.id_kode_urut = b.id
         LEFT JOIN kode_level AS c ON c.id = b.id_kode_level
-        LEFT JOIN jenis_apbd AS d ON d.id = a.id_jenis_apbd";
-
-// Add WHERE clause if a year is selected
-if ($selected_year != '') {
-    $sql .= " WHERE tahun = ?";
-}
-
-$sql .= " ORDER BY tahun, kode DESC";
+        LEFT JOIN jenis_apbd AS d ON d.id = a.id_jenis_apbd
+        " . $where_clause . "
+        ORDER BY tahun, kode DESC";
 
 // Prepare the statement
 $stmt = $conn->prepare($sql);
@@ -64,8 +64,8 @@ if ($years_result->num_rows > 0) {
     <select name="tahun" id="tahun" onchange="this.form.submit()">
         <option value="">-- Semua Tahun --</option>
         <?php foreach ($available_years as $year): ?>
-            <option value="<?php echo htmlspecialchars($year); ?>" 
-                    <?php echo ($selected_year == $year) ? 'selected' : ''; ?>>
+            <option value="<?php echo htmlspecialchars($year); ?>"
+                <?php echo ($selected_year == $year) ? 'selected' : ''; ?>>
                 <?php echo htmlspecialchars($year); ?>
             </option>
         <?php endforeach; ?>
@@ -102,7 +102,7 @@ if ($result->num_rows > 0):
                 <th style="text-align: center;">Anggaran Perubahan</th>
                 <th style="text-align: center;">Selisih</th>
                 <th style="text-align: center;">Tahapan</th>
-                <th style="text-align: center;">Aksi</th> 
+                <th style="text-align: center;">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -116,12 +116,12 @@ if ($result->num_rows > 0):
                     <td><?php echo htmlspecialchars($row['nama_kode']); ?></td>
                     <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] ?? 0, 2, ',', '.')); ?></td>
                     <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_perubahan'] ?? 0, 2, ',', '.')); ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format(($row['jumlah_perubahan']-$row['jumlah_anggaran']) ?? 0, 2, ',', '.')); ?></td>
+                    <td style="text-align:right"><?php echo htmlspecialchars(number_format(($row['jumlah_perubahan'] - $row['jumlah_anggaran']) ?? 0, 2, ',', '.')); ?></td>
                     <td><?php echo htmlspecialchars($row['jenis_apbd']); ?></td>
                     <td class="actions">
                         <a href="update.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="edit">Edit</a>
-                        <a href="delete.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="delete" 
-                           onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
+                        <a href="delete.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="delete"
+                            onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
                     </td>
                 </tr>
             <?php endwhile; ?>
