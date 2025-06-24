@@ -2,21 +2,30 @@
 
 /* --- 1. Variabel Global & Tema --- */
 :root {
-    --primary-color: #6C63FF; /* Violet terang, modern dan berenergi */
+    --primary-color: #6C63FF;
+    /* Violet terang, modern dan berenergi */
     --primary-dark: #574BDB;
-    --accent-color: #00C896; /* Hijau tosca yang menyegarkan sebagai aksen */
-    --text-dark: #344054; /* Abu-abu gelap untuk teks utama */
-    --text-light: #F9FAFB; /* Hampir putih untuk teks terang */
-    --bg-light: #F2F4F7; /* Latar belakang abu-abu sangat terang */
-    --card-bg: rgba(255, 255, 255, 0.85); /* Latar belakang kartu semi-transparan (glassmorphism) */
-    --border-color: rgba(220, 226, 235, 0.7); /* Border yang lebih lembut */
+    --accent-color: #00C896;
+    /* Hijau tosca yang menyegarkan sebagai aksen */
+    --text-dark: #344054;
+    /* Abu-abu gelap untuk teks utama */
+    --text-light: #F9FAFB;
+    /* Hampir putih untuk teks terang */
+    --bg-light: #F2F4F7;
+    /* Latar belakang abu-abu sangat terang */
+    --card-bg: rgba(255, 255, 255, 0.85);
+    /* Latar belakang kartu semi-transparan (glassmorphism) */
+    --border-color: rgba(220, 226, 235, 0.7);
+    /* Border yang lebih lembut */
     --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.08);
     --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.12);
-    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.1); /* Untuk efek glassmorphism */
+    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    /* Untuk efek glassmorphism */
     --success-color: #28A745;
     --danger-color: #DC3545;
     --warning-color: #FFC107;
-    --radius-base: 14px; /* Radius sudut dasar */
+    --radius-base: 14px;
+    /* Radius sudut dasar */
     --transition-fast: 0.2s ease-out;
     --transition-normal: 0.3s ease-in-out;
 }
@@ -127,7 +136,8 @@ nav a:hover::before {
 /* --- 5. Menu Dropdown (General & Form) --- */
 .dropdown {
     position: relative;
-    display: inline-block; /* Agar dropdown di form bisa sejajar dengan label/input lain */
+    display: inline-block;
+    /* Agar dropdown di form bisa sejajar dengan label/input lain */
     font-family: 'Poppins', sans-serif;
 }
 
@@ -162,7 +172,8 @@ form .dropdown .dropbtn {
 form .dropdown .dropbtn:hover {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1), var(--shadow-soft);
-    background-color: var(--card-bg); /* Pastikan tetap semi-transparan */
+    background-color: var(--card-bg);
+    /* Pastikan tetap semi-transparan */
     transform: translateY(-2px);
 }
 
@@ -238,7 +249,8 @@ form .dropdown .dropbtn:focus {
 
 /* Styling untuk opsi yang 'selected' di dropdown kustom */
 .dropdown-content a.selected {
-    background-color: rgba(108, 99, 255, 0.15); /* Latar belakang untuk opsi yang terpilih */
+    background-color: rgba(108, 99, 255, 0.15);
+    /* Latar belakang untuk opsi yang terpilih */
     color: var(--primary-dark);
     font-weight: 600;
 }
@@ -501,14 +513,17 @@ form button:hover {
     .container {
         padding: 30px;
     }
+
     h1 {
         font-size: 2.5em;
         margin-bottom: 40px;
     }
+
     nav {
         gap: 15px;
         padding: 15px 0;
     }
+
     nav a {
         padding: 10px 20px;
     }
@@ -519,15 +534,18 @@ form button:hover {
         width: 95%;
         padding: 25px 20px;
     }
+
     h1 {
         font-size: 2.2em;
         margin-bottom: 30px;
     }
+
     nav {
         flex-direction: column;
         gap: 10px;
         padding: 12px 0;
     }
+
     nav a {
         width: calc(100% - 40px);
         display: block;
@@ -540,9 +558,11 @@ form button:hover {
         box-shadow: none;
         border-radius: 0;
     }
+
     table thead {
         display: none;
     }
+
     table,
     table tbody,
     table tr,
@@ -550,6 +570,7 @@ form button:hover {
         display: block;
         width: 100%;
     }
+
     table tr {
         margin-bottom: 20px;
         border: 1px solid var(--border-color);
@@ -562,6 +583,7 @@ form button:hover {
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(5px);
     }
+
     table td {
         border: none;
         text-align: right;
@@ -570,6 +592,7 @@ form button:hover {
         padding-left: 50%;
         word-wrap: break-word;
     }
+
     table td::before {
         content: attr(data-label);
         position: absolute;
@@ -583,6 +606,7 @@ form button:hover {
         color: var(--primary-dark);
         text-align: left;
     }
+
     table td.actions {
         text-align: center;
         padding-left: 0;
@@ -590,6 +614,7 @@ form button:hover {
         border-top: 1px dashed var(--border-color);
         padding-top: 15px;
     }
+
     table td.actions::before {
         content: "";
         display: none;
@@ -600,6 +625,7 @@ form button:hover {
         padding: 10px 20px;
         font-size: 0.95em;
     }
+
     .dropdown-content {
         min-width: unset;
         width: calc(100% - 40px);
@@ -607,26 +633,31 @@ form button:hover {
         right: 20px;
         transform: translateY(10px) translateX(0) !important;
     }
+
     .dropdown.active .dropdown-content {
-         transform: translateY(0) translateX(0) !important;
+        transform: translateY(0) translateX(0) !important;
     }
 
     /* Form responsif */
     form {
         padding: 25px;
     }
+
     form h2 {
         font-size: 1.8em;
     }
+
     .button-group {
         flex-direction: column;
         gap: 12px;
     }
+
     form button {
         width: 100%;
         text-align: center;
         justify-content: center;
     }
+
     .message-box {
         padding: 15px 20px;
         font-size: 0.95em;
@@ -637,40 +668,133 @@ form button:hover {
     .container {
         padding: 20px 15px;
     }
+
     h1 {
         font-size: 1.8em;
     }
+
     nav {
         gap: 8px;
     }
+
     nav a {
         margin-bottom: 5px;
     }
+
     form {
         padding: 20px;
     }
+
     form input[type="text"],
     form input[type="email"],
     form textarea {
         font-size: 0.9em;
         padding: 12px;
     }
+
     table th,
     table td {
         padding: 12px 15px;
         font-size: 0.9em;
     }
+
     table td.actions a {
         padding: 8px 12px;
         font-size: 0.85em;
     }
+
     .dropdown-content {
         left: 15px;
         right: 15px;
         width: calc(100% - 30px);
     }
+
     .dropdown-content a {
         padding: 10px 15px;
         font-size: 0.95em;
     }
+}
+
+/* Kelas untuk tombol dasar elegan */
+.btn-elegant {
+    display: inline-block;
+    /* Agar bisa menampung padding dan margin dengan baik */
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    /* Sedikit lebih tebal */
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    /* Sudut sedikit membulat */
+    transition: all 0.3s ease;
+    /* Transisi halus untuk hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Sedikit bayangan untuk kedalaman */
+}
+
+/* Warna primer (biru) */
+.btn-primary {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    /* Sedikit lebih gelap saat hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    /* Bayangan lebih besar saat hover */
+    transform: translateY(-2px);
+    /* Sedikit naik saat hover */
+}
+
+/* Warna sekunder (abu-abu) */
+.btn-secondary {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Tombol sukses (hijau) */
+.btn-success {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Tombol peringatan (kuning) */
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+    /* Teks gelap agar kontras */
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Tombol bahaya (merah) */
+.btn-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
 }
