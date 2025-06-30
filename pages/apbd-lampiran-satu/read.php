@@ -98,8 +98,8 @@ if ($result->num_rows > 0):
                 <th>Tahun</th>
                 <th>Kode</th>
                 <th>Nama Kode</th>
-                <th style="text-align: center;">Anggaran Murni</th>
-                <th style="text-align: center;">Anggaran Perubahan</th>
+                <th style="text-align: center;">Anggaran</th>
+                <th style="text-align: center;">Perubahan</th>
                 <th style="text-align: center;">Selisih</th>
                 <th style="text-align: center;">Tahapan</th>
                 <th style="text-align: center;">Aksi</th>

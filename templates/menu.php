@@ -27,8 +27,8 @@
                     <div class="menu-section">
                             <h3><i class="fas fa-paperclip"></i> Lampiran Dokumen</h3>
                             <ul>
-                                    <li><a href="pages/lkpd-lampiran-satu/read.php"><i class="fas fa-file-alt"></i> Lampiran 1 - LKPD</a></li>
                                     <li><a href="pages/apbd-lampiran-satu/read.php"><i class="fas fa-file-invoice-dollar"></i> Lampiran 1 - APBD</a></li>
+                                    <li><a href="pages/lkpd-lampiran-satu/read.php"><i class="fas fa-file-alt"></i> Lampiran 1 - LKPD</a></li>
                             </ul>
                     </div>
 
@@ -61,7 +61,7 @@
 
                     .main-menu h3 i {
                             margin-right: 8px;
-                            color:rgb(0, 0, 0);
+                            color: rgb(0, 0, 0);
                             /* Warna ikon */
                     }
 

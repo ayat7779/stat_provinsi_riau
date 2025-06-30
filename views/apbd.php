@@ -47,7 +47,7 @@ FROM (
     GROUP BY tahun, kode, id_jenis_apbd
     UNION ALL
     -- pembiayaan neto
-    SELECT tahun, '6.3.' AS kode, 
+    SELECT tahun, '6.2.9' AS kode, 
     SUM(CASE WHEN (LEFT(b.no_urut,4)= '6.1.') THEN a.jumlah_anggaran ELSE 0 END)
     -SUM(CASE WHEN (LEFT(b.no_urut,4)= '6.2.') THEN a.jumlah_anggaran ELSE 0 END)AS anggaran, 
     SUM(CASE WHEN (LEFT(b.no_urut,4)= '6.1.') THEN a.jumlah_perubahan ELSE 0 END)
@@ -59,7 +59,7 @@ FROM (
     GROUP BY tahun, kode, id_jenis_apbd
     UNION ALL
     -- SILPA
-    SELECT tahun, '6.4.' AS kode, 
+    SELECT tahun, '6.3.' AS kode, 
     (SUM(CASE WHEN (LEFT(b.no_urut,2)= '4.') THEN a.jumlah_anggaran ELSE 0 END)
     -SUM(CASE WHEN (LEFT(b.no_urut,2)= '5.') THEN a.jumlah_anggaran ELSE 0 END))+
     (SUM(CASE WHEN (LEFT(b.no_urut,4)= '6.1.') THEN a.jumlah_anggaran ELSE 0 END)

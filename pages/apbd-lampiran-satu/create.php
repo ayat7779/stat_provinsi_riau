@@ -160,7 +160,7 @@ if (!empty($success_message)): ?>
         <span class="error"><?php echo $jumlah_anggaran_err; ?></span>
     </div>
     <div>
-        <label>Jumlah Anggaran Perubahan</label>
+        <label>Jumlah Perubahan</label>
         <input type="text" name="jumlah_perubahan" value="<?php echo htmlspecialchars($jumlah_perubahan); ?>">
         <span class="error"><?php echo $jumlah_perubahan_err; ?></span>
     </div>
