@@ -96,7 +96,7 @@ if ($stmt === false) {
 
 // Bind parameter if a year is selected
 if ($selected_year != '') {
-    $stmt->bind_param("s", $selected_year); // "s" for string, adjust if tahun_lkpd is integer
+    $stmt->bind_param("s", $selected_year);
 }
 
 // Execute the statement
