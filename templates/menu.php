@@ -1,18 +1,3 @@
-            <!-- <nav>
-                    <a href="apbd-kode-urut/read.php">Kode Urut APBD</a>
-                    <a href="lkpd-kode-catatan/read.php">Kode Catatan LKPD APBD</a>
-                    <a href="apbd-jenis/read.php">Jenis APBD</a>
-                    <a href="level-kode/read.php">Level Kode</a>
-                    <a href="lkpd-lampiran-satu/read.php">Lampiran 1 - LKPD</a>
-                    <a href="apbd-lampiran-satu/read.php">Lampiran 1 - APBD</a>
-
-            </nav>
-            <hr>
-            <ul>
-                    <li><a href="index.php?page=apbd">Data APBD</a></li>
-                    <li><a href="index.php?page=lkpd_apbd">Data LKPD APBD</a></li>
-            </ul> -->
-
             <nav class="main-menu">
                     <div class="menu-section">
                             <h3><i class="fas fa-cog"></i> Pengaturan & Referensi</h3>
@@ -37,6 +22,7 @@
                             <ul>
                                     <li><a href="index.php?page=apbd"><i class="fas fa-chart-bar"></i> Data APBD</a></li>
                                     <li><a href="index.php?page=lkpd_apbd"><i class="fas fa-chart-line"></i> Data LKPD APBD</a></li>
+                                    <li><a href="index.php?page=kinerja_keuangan"><i class="fas fa-chart-line"></i> KINERJA KEUANGAN</a></li>
                             </ul>
                     </div>
             </nav>

@@ -23,6 +23,9 @@ switch ($page) {
     case 'lkpd_apbd': 
         include_once 'views/lkpd_apbd.php';
         break;
+    case 'kinerja_keuangan': 
+        include_once 'views/kinerja_keuangan.php';
+        break;
     default:
         include_once 'views/apbd.php';
         break;
