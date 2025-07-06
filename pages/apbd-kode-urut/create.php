@@ -4,15 +4,18 @@ session_start();
 include '../../config/database.php';
 include '../../templates/header.php';
 
-$nourut_err = $uraian_err = $idkodelevel_err = "";
-$nourut = $uraian = $idkodelevel = "";
+// Initialize variables for error messages and form data
+$nourut_err = $uraian_err = $akronim_err = $idkodelevel_err = "";
+$nourut = $uraian = $akronim = $idkodelevel ="";
 
 $success_message = "";
 
+// Fetch all levels from the database
 $levels = [];
 $sql_levels = "SELECT id, nama_level, akronim FROM kode_level ORDER BY id ASC";
 $result_levels = $conn->query($sql_levels);
 
+// Check if the query was successful
 if ($result_levels) {
     while ($row = $result_levels->fetch_assoc()) {
         $levels[] = $row;
@@ -22,13 +25,7 @@ if ($result_levels) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    if (empty(trim($_POST["uraian"]))) {
-        $uraian_err = "<p class='error-message'>Uraian tidak boleh kosong.</p>";
-    } else {
-        $uraian = trim($_POST["uraian"]);
-    }
-
+    //Validate Nomor Urut
     if (empty(trim($_POST["no_urut"]))) {
         $nourut_err = "<p class='error-message'>Nomor Urut tidak boleh kosong.</p>";
     } else {
@@ -50,7 +47,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->close();
         }
     }
-
+    //Validate Uraian
+    if (empty(trim($_POST["uraian"]))) {
+        $uraian_err = "<p class='error-message'>Uraian tidak boleh kosong.</p>";
+    } else {
+        $uraian = trim($_POST["uraian"]);
+    }
+    //Validate Akronim
+    if (empty(trim($_POST["akronim"]))) {
+        $akronim_err = "<p class='error-message'>Akronim tidak boleh kosong.</p>";
+    } else {
+        $akronim = trim($_POST["akronim"]);
+    }
+    //Validate Level
     if (empty(trim($_POST["id_kode_level"]))) {
         $idkodelevel_err = "<p class='error-message'>Level tidak boleh kosong.</p>";
     } elseif (!is_numeric(trim($_POST["id_kode_level"]))) {
@@ -58,22 +67,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $idkodelevel = (int)trim($_POST["id_kode_level"]);
     }
-
-    if (empty($nourut_err) && empty($uraian_err) && empty($idkodelevel_err)) {
-        $sql = "INSERT INTO kode_urut (no_urut, uraian, id_kode_level) VALUES (?, ?, ?)";
-
+    //Check for errors before inserting into database
+    if (empty($nourut_err) && empty($uraian_err) && empty($akronim_err) && empty($idkodelevel_err)) {
+        $sql = "INSERT INTO kode_urut (no_urut, uraian, akronim, id_kode_level) VALUES (?, ?, ?, ?)"; 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("ssi", $param_nourut, $param_uraian, $param_idkodelevel);
+            $stmt->bind_param("sssi", $param_nourut, $param_uraian, $param_akronim, $param_idkodelevel);
 
             $param_nourut = $nourut;
             $param_uraian = $uraian;
+            $param_akronim = $akronim;
             $param_idkodelevel = $idkodelevel;
 
             if ($stmt->execute()) {
                 $success_message = "Data berhasil disimpan!";
-                $nourut = $uraian = $idkodelevel = "";
+                $nourut = $uraian = $akronim = $idkodelevel = "";
             } else {
-                echo "<p class='error-message'>Ada yang salah saat menyimpan data. Silakan coba lagi nanti: </p>". $stmt->error;
+                echo "<p class='error-message'>Ada yang salah saat menyimpan data. Silakan coba lagi nanti: </p>" . $stmt->error;
             }
             $stmt->close();
         }
@@ -105,6 +114,11 @@ if (!empty($success_message)): ?>
         <label>Uraian</label>
         <input type="text" name="uraian" value="<?php echo htmlspecialchars($uraian); ?>">
         <span class="error"><?php echo $uraian_err; ?></span>
+    </div>
+    <div>
+        <label>Akronim</label>
+        <input type="text" name="akronim" value="<?php echo htmlspecialchars($akronim); ?>">
+        <span class="error"><?php echo $akronim_err; ?></span>
     </div>
     <div>
         <label>Nama Level</label>

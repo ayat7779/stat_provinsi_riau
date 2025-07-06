@@ -4,7 +4,7 @@ session_start();
 include '../../config/database.php';
 include '../../templates/header.php';
 
-$sql = "SELECT ku.id, ku.no_urut, ku.uraian, kl.nama_level
+$sql = "SELECT ku.id, ku.no_urut, ku.uraian, kl.nama_level, ku.akronim
         FROM kode_urut ku
         INNER JOIN kode_level kl
         ON ku.id_kode_level = kl.id
@@ -43,6 +43,7 @@ if ($result->num_rows > 0):
                 <th style="display: none;">ID</th>
                 <th>Kode</th>
                 <th>Uraian</th>
+                <th>Akronim</th>
                 <th>Level</th>
                 <th>Aksi</th>
             </tr>
@@ -55,6 +56,7 @@ if ($result->num_rows > 0):
                     <td style="display: none;"><?php echo htmlspecialchars($row['id']); ?></td>
                     <td><?php echo htmlspecialchars($row['no_urut']); ?></td>
                     <td><?php echo htmlspecialchars($row['uraian']); ?></td>
+                    <td><?php echo htmlspecialchars($row['akronim']); ?></td>
                     <td><?php echo htmlspecialchars($row['nama_level']); ?></td>
                     <td class="actions">
                         <a href="update.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="edit">Edit</a>

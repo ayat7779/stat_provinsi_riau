@@ -7,8 +7,8 @@ session_start();
 
 include '../../config/database.php';
 
-$nourut_err = $uraian_err = $idkodelevel_err = "";
-$id = $nourut = $uraian = $idkodelevel = "";
+$nourut_err = $uraian_err = $idkodelevel_err = $akronim_err = "";
+$id = $nourut = $uraian = $idkodelevel = $akronim = "";
 
 $success_message = "";
 $general_error_message = "";
@@ -22,14 +22,9 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
     exit();
 }
 
+// Check if the ID is a valid integer
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  
-    if (empty(trim($_POST["uraian"]))) {
-        $uraian_err = "Uraian tidak boleh kosong.";
-    } else {
-        $uraian = trim($_POST["uraian"]);
-    }
-
+    // Validate nomor urut
     if (empty(trim($_POST["nourut"]))) {
         $nourut_err = "Nomor Urut tidak boleh kosong.";
     } else {
@@ -57,6 +52,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    // Validate uraian
+    if (empty(trim($_POST["uraian"]))) {
+        $uraian_err = "Uraian tidak boleh kosong.";
+    } else {
+        $uraian = trim($_POST["uraian"]);
+    }
+
+    // Validate akronim
+    if (empty(trim($_POST["akronim"]))) {
+        $akronim_err = "Akronim tidak boleh kosong.";
+    } else {
+        $akronim = trim($_POST["akronim"]);
+    }
+
+    // Validate level
     if (empty(trim($_POST["id_kode_level"]))) {
         $idkodelevel_err = "Level tidak boleh kosong.";
     } elseif (!is_numeric(trim($_POST["id_kode_level"]))) {
@@ -65,14 +75,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $idkodelevel = (int)trim($_POST["id_kode_level"]);
     }
 
-    if (empty($nourut_err) && empty($uraian_err) && empty($idkodelevel_err) && empty($general_error_message)) {
-        $sql = "UPDATE kode_urut SET no_urut = ?, uraian = ?, id_kode_level = ? WHERE id = ?";
+    // Check for errors before updating the database
+    if (empty($nourut_err) && empty($uraian_err) && empty($akronim_err) && empty($idkodelevel_err) && empty($general_error_message)) {
+        $sql = "UPDATE kode_urut SET no_urut = ?, uraian = ?, akronim = ?, id_kode_level = ? WHERE id = ?";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("ssii", $param_nourut, $param_uraian, $param_idkodelevel, $param_id);
+            $stmt->bind_param("sssii", $param_nourut, $param_uraian, $param_akronim, $param_idkodelevel, $param_id);
 
             $param_nourut = $nourut;
             $param_uraian = $uraian;
+            $param_akronim = $akronim;
             $param_idkodelevel = $idkodelevel;
             $param_id = $id;
 
@@ -89,26 +101,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else {
         if (empty($general_error_message)) {
-             $general_error_message = "Validasi gagal. Mohon periksa kembali input Anda.";
+            $general_error_message = "Validasi gagal. Mohon periksa kembali input Anda.";
         }
         $nourut = isset($_POST["nourut"]) ? trim($_POST["nourut"]) : '';
         $uraian = isset($_POST["uraian"]) ? trim($_POST["uraian"]) : '';
+        $akronim = isset($_POST["akronim"]) ? trim($_POST["akronim"]) : '';
         $idkodelevel = isset($_POST["id_kode_level"]) ? (int)trim($_POST["id_kode_level"]) : '';
     }
 }
-
+// Fetch all levels from the database
 $levels = [];
 $sql_levels_reget = "SELECT id, nama_level FROM kode_level ORDER BY id ASC";
 $result_levels_reget = $conn->query($sql_levels_reget);
-
+// Check if the query was successful
 if ($result_levels_reget) {
     while ($row = $result_levels_reget->fetch_assoc()) {
         $levels[] = $row;
     }
 }
-
+// If the levels array is empty, set an error message
 if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !empty($id))) {
-    $sql_fetch = "SELECT ku.id, ku.no_urut, ku.uraian, ku.id_kode_level
+    $sql_fetch = "SELECT ku.id, ku.no_urut, ku.uraian, ku.akronim, ku.id_kode_level
             FROM kode_urut ku
             WHERE ku.id = ?";
     if ($stmt_fetch = $conn->prepare($sql_fetch)) {
@@ -122,6 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && !e
                 if ($_SERVER["REQUEST_METHOD"] == "GET" || (!empty($general_error_message) && empty($nourut))) {
                     $nourut = $row_fetch["no_urut"];
                     $uraian = $row_fetch["uraian"];
+                    $akronim = $row_fetch["akronim"];
                     $idkodelevel = $row_fetch["id_kode_level"];
                 }
             } else {
@@ -172,6 +186,11 @@ elseif (!empty($general_error_message)): ?>
         <label>Uraian</label>
         <input type="text" name="uraian" value="<?php echo htmlspecialchars($uraian); ?>">
         <span class="error"><?php echo $uraian_err; ?></span>
+    </div>
+    <div>
+        <label>Akronim</label>
+        <input type="text" name="akronim" value="<?php echo htmlspecialchars($akronim); ?>">
+        <span class="error"><?php echo $akronim_err; ?></span>
     </div>
     <div>
         <label>Nama Level</label>
