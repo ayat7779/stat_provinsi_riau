@@ -63,8 +63,8 @@ if ($years_result->num_rows > 0) {
     <select name="tahun" id="tahun" onchange="this.form.submit()">
         <option value="">-- Semua Tahun --</option>
         <?php foreach ($available_years as $year): ?>
-            <option value="<?php echo htmlspecialchars($year); ?>" 
-                    <?php echo ($selected_year == $year) ? 'selected' : ''; ?>>
+            <option value="<?php echo htmlspecialchars($year); ?>"
+                <?php echo ($selected_year == $year) ? 'selected' : ''; ?>>
                 <?php echo htmlspecialchars($year); ?>
             </option>
         <?php endforeach; ?>
@@ -90,48 +90,50 @@ if (isset($_GET['error'])): ?>
 <?php
 if ($result->num_rows > 0):
 ?>
-    <table>
-        <thead>
-            <tr>
-                <th style="display: none;">ID</th>
-                <th>Tahun</th>
-                <th>Catatan</th>
-                <th>Uraian</th>
-                <th style="text-align: center;">Anggaran</th>
-                <th style="text-align: center;">Realisasi</th>
-                <th style="text-align: center;">Persentase</th>
-                <th style="text-align: center;">Sisa Anggaran</th>
-                <th style="text-align: center;">Aksi</th> 
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            while ($row = $result->fetch_assoc()):
-            ?>
+    <div class="table-responsive">
+        <table>
+            <thead>
                 <tr>
-                    <td style="display: none;"><?php echo htmlspecialchars($row['id']); ?></td>
-                    <td><?php echo htmlspecialchars($row['tahun_lkpd']); ?></td>
-                    <td><?php echo htmlspecialchars($row['kode_catatan']); ?></td>
-                    <td><?php echo htmlspecialchars($row['uraian']); ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] ?? 0, 2, ',', '.')); ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_realisasi'] ?? 0, 2, ',', '.')); ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['persentase'] ?? 0, 2, ',', '.')) . '%'; ?></td>
-                    <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] - $row['jumlah_realisasi'], 2, ',', '.')); ?></td>
-                    <td class="actions">
-                        <a href="update.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="edit">Edit</a>
-                        <a href="delete.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="delete" 
-                           onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
-                    </td>
+                    <th style="display: none;">ID</th>
+                    <th>Tahun</th>
+                    <th>Catatan</th>
+                    <th>Uraian</th>
+                    <th style="text-align: center;">Anggaran</th>
+                    <th style="text-align: center;">Realisasi</th>
+                    <th style="text-align: center;">Persentase</th>
+                    <th style="text-align: center;">Sisa Anggaran</th>
+                    <th style="text-align: center;">Aksi</th>
                 </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
-<?php else: ?>
-    <p>Belum ada data.</p>
-<?php endif; ?>
+            </thead>
+            <tbody>
+                <?php
+                while ($row = $result->fetch_assoc()):
+                ?>
+                    <tr>
+                        <td style="display: none;"><?php echo htmlspecialchars($row['id']); ?></td>
+                        <td><?php echo htmlspecialchars($row['tahun_lkpd']); ?></td>
+                        <td><?php echo htmlspecialchars($row['kode_catatan']); ?></td>
+                        <td><?php echo htmlspecialchars($row['uraian']); ?></td>
+                        <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] ?? 0, 2, ',', '.')); ?></td>
+                        <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_realisasi'] ?? 0, 2, ',', '.')); ?></td>
+                        <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['persentase'] ?? 0, 2, ',', '.')) . '%'; ?></td>
+                        <td style="text-align:right"><?php echo htmlspecialchars(number_format($row['jumlah_anggaran'] - $row['jumlah_realisasi'], 2, ',', '.')); ?></td>
+                        <td class="actions">
+                            <a href="update.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="edit">Edit</a>
+                            <a href="delete.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="delete"
+                                onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p>Belum ada data.</p>
+    <?php endif; ?>
+    </div>
 
-<?php
-$stmt->close();
-$conn->close();
-include '../../templates/footer.php';
-?>
+    <?php
+    $stmt->close();
+    $conn->close();
+    include '../../templates/footer.php';
+    ?>
