@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 30 Jun 2025 pada 15.25
+-- Waktu pembuatan: 07 Jul 2025 pada 03.55
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -128,6 +128,20 @@ INSERT INTO `jenis_apbd` (`id`, `uraian`, `akronim`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Stand-in struktur untuk tampilan `kinerja_keuangan`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+CREATE TABLE `kinerja_keuangan` (
+`tahun` int(11)
+,`kinerja` varchar(255)
+,`target` decimal(50,6)
+,`realisasi` decimal(50,6)
+,`ketercapaian` decimal(63,10)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `kode_catatan`
 --
 
@@ -237,7 +251,9 @@ CREATE TABLE `kode_level` (
 INSERT INTO `kode_level` (`id`, `nama_level`, `akronim`) VALUES
 (1, 'Akun', 'Akn'),
 (2, 'Kelompok', 'Klp'),
-(3, 'Jenis', 'Jns');
+(3, 'Jenis', 'Jns'),
+(6, 'Objek', 'Obj'),
+(7, 'Rincian Objek', 'RO');
 
 -- --------------------------------------------------------
 
@@ -249,6 +265,7 @@ CREATE TABLE `kode_urut` (
   `id` int(11) NOT NULL,
   `no_urut` varchar(11) DEFAULT NULL,
   `uraian` varchar(255) DEFAULT NULL,
+  `akronim` varchar(255) DEFAULT NULL,
   `id_kode_level` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -256,43 +273,86 @@ CREATE TABLE `kode_urut` (
 -- Dumping data untuk tabel `kode_urut`
 --
 
-INSERT INTO `kode_urut` (`id`, `no_urut`, `uraian`, `id_kode_level`) VALUES
-(1, '4.', 'PENDAPATAN DAERAH', 1),
-(2, '4.1.', 'PENDAPATAN ASLI DAERAH', 2),
-(3, '4.1.01.', 'Pajak Daerah', 3),
-(4, '4.1.02.', 'Retribusi Daerah', 3),
-(5, '4.1.03.', 'Hasil Pengelolaan Kekayaan Daerah Yang Dipisahkan', 3),
-(6, '4.1.04.', 'Lain-lain PAD Yang Sah', 3),
-(7, '4.2.', 'PENDAPATAN TRANSFER', 2),
-(8, '4.2.01.', 'Pendapatan Transfer Pemerintah Pusat', 3),
-(11, '4.3.', 'LAIN-LAIN PENDAPATAN DAERAH YANG SAH', 2),
-(12, '4.3.01.', 'Pendapatan Hibah', 3),
-(16, '5.', 'BELANJA', 1),
-(17, '5.1.', 'BELANJA OPERASI', 2),
-(18, '5.1.01.', 'Belanja Pegawai', 3),
-(21, '5.1.05.', 'Belanja Hibah', 3),
-(22, '5.1.06.', 'Belanja Bantuan Sosial', 3),
-(25, '5.2.', 'BELANJA MODAL', 2),
-(26, '5.2.01.', 'Belanja Modal Tanah', 3),
-(27, '5.1.02.', 'Belanja Barang dan Jasa', 3),
-(28, '5.2.02.', 'Belanja Modal Peralatan dan Mesin', 3),
-(30, '5.3.', 'BELANJA TIDAK TERDUGA', 2),
-(31, '5.3.01.', 'Belanja Tidak Terduga', 3),
-(32, '5.4.', 'BELANJA TRANSFER', 2),
-(33, '5.4.01.', 'Belanja Bagi Hasil', 3),
-(48, '5.2.03.', 'Belanja Modal Gedung dan Bangunan', 3),
-(49, '5.2.04.', 'Belanja Modal Jalan, Jaringan, dan Irigasi', 3),
-(50, '5.2.05.', 'Belanja Modal Aset Tetap Lainnya', 3),
-(51, '5.2.06.', 'Belanja Modal Aset Lainnya', 3),
-(52, '5.4.02.', 'Belanja Bantuan Keuangan', 3),
-(53, '6.', 'PEMBIAYAAN DAERAH', 1),
-(54, '6.1.', 'PENERIMAAN PEMBIAYAAN', 2),
-(55, '6.1.01.', 'Sisa Lebih Perhitungan Anggaran Tahun Sebelumnya', 3),
-(56, '6.3.', 'Sisa Lebih Pembiayaan Anggaran Daerah Tahun Berkenaan (SILPA)', 2),
-(57, '5.5.', 'SURPLUS/DEFISIT', 2),
-(58, '6.2.9', 'Pembiayaan Neto', 2),
-(59, '6.2.', 'PENGELUARAN PEMBIAYAAN', 2),
-(60, '6.2.02.', 'Penyertaan Modal Daerah', 3);
+INSERT INTO `kode_urut` (`id`, `no_urut`, `uraian`, `akronim`, `id_kode_level`) VALUES
+(1, '4.', 'PENDAPATAN DAERAH', NULL, 1),
+(2, '4.1.', 'PENDAPATAN ASLI DAERAH', NULL, 2),
+(3, '4.1.01.', 'Pajak Daerah', NULL, 3),
+(4, '4.1.02.', 'Retribusi Daerah', NULL, 3),
+(5, '4.1.03.', 'Hasil Pengelolaan Kekayaan Daerah Yang Dipisahkan', NULL, 3),
+(6, '4.1.04.', 'Lain-lain PAD Yang Sah', NULL, 3),
+(7, '4.2.', 'PENDAPATAN TRANSFER', NULL, 2),
+(8, '4.2.01.', 'Pendapatan Transfer Pemerintah Pusat', NULL, 3),
+(11, '4.3.', 'LAIN-LAIN PENDAPATAN DAERAH YANG SAH', NULL, 2),
+(12, '4.3.01.', 'Pendapatan Hibah', NULL, 3),
+(16, '5.', 'BELANJA', NULL, 1),
+(17, '5.1.', 'BELANJA OPERASI', NULL, 2),
+(18, '5.1.01.', 'Belanja Pegawai', NULL, 3),
+(21, '5.1.05.', 'Belanja Hibah', NULL, 3),
+(22, '5.1.06.', 'Belanja Bantuan Sosial', NULL, 3),
+(25, '5.2.', 'BELANJA MODAL', NULL, 2),
+(26, '5.2.01.', 'Belanja Modal Tanah', NULL, 3),
+(27, '5.1.02.', 'Belanja Barang dan Jasa', NULL, 3),
+(28, '5.2.02.', 'Belanja Modal Peralatan dan Mesin', NULL, 3),
+(30, '5.3.', 'BELANJA TIDAK TERDUGA', NULL, 2),
+(31, '5.3.01.', 'Belanja Tidak Terduga', NULL, 3),
+(32, '5.4.', 'BELANJA TRANSFER', NULL, 2),
+(33, '5.4.01.', 'Belanja Bagi Hasil', NULL, 3),
+(48, '5.2.03.', 'Belanja Modal Gedung dan Bangunan', NULL, 3),
+(49, '5.2.04.', 'Belanja Modal Jalan, Jaringan, dan Irigasi', NULL, 3),
+(50, '5.2.05.', 'Belanja Modal Aset Tetap Lainnya', NULL, 3),
+(51, '5.2.06.', 'Belanja Modal Aset Lainnya', NULL, 3),
+(52, '5.4.02.', 'Belanja Bantuan Keuangan', NULL, 3),
+(53, '6.', 'PEMBIAYAAN DAERAH', NULL, 1),
+(54, '6.1.', 'PENERIMAAN PEMBIAYAAN', NULL, 2),
+(55, '6.1.01.', 'Sisa Lebih Perhitungan Anggaran Tahun Sebelumnya', NULL, 3),
+(56, '6.3.', 'Sisa Lebih Pembiayaan Anggaran Daerah Tahun Berkenaan (SILPA)', NULL, 2),
+(57, '5.5.', 'SURPLUS/DEFISIT', NULL, 2),
+(58, '6.2.9', 'Pembiayaan Neto', NULL, 2),
+(59, '6.2.', 'PENGELUARAN PEMBIAYAAN', NULL, 2),
+(60, '6.2.02.', 'Penyertaan Modal Daerah', NULL, 3),
+(61, '4.1.01.01', 'Pajak Kendaraan Bermotor', 'PKB', 6),
+(62, '4.1.01.02', 'Bea Balik Nama Kendaraan Bermotor', 'BBNKB', 6),
+(63, '4.1.01.03', 'Pajak Bahan Bakar Kendaraan Bermotor', 'PBBKB', 6),
+(64, '4.1.01.04', 'Pajak Air Permukaan', 'PAP', 6),
+(65, '4.1.01.05', 'Pajak Rokok', 'PR', 6),
+(66, '4.1.01.17', 'Pajak Alat Berat', 'PAB', 6),
+(67, '4.1.01.18', 'Opsen Mineral Bukan Logam dan Batuan', 'OMBLB', 6);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in struktur untuk tampilan `lampiran1_apbd`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+CREATE TABLE `lampiran1_apbd` (
+`tahun` int(11)
+,`kode` varchar(11)
+,`uraian` varchar(255)
+,`anggaran` decimal(42,2)
+,`perubahan` decimal(42,2)
+,`bertambah_berkurang` decimal(43,2)
+,`persentase` decimal(49,2)
+,`jenis_apbd` varchar(255)
+,`id_kode_level` int(11)
+,`nama_level` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in struktur untuk tampilan `lampiran1_lkpd`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+CREATE TABLE `lampiran1_lkpd` (
+`id_kode_level` int(2)
+,`tahun_lkpd` int(11)
+,`kode` varchar(255)
+,`uraian` varchar(1024)
+,`anggaran` decimal(43,2)
+,`realisasi` decimal(43,2)
+,`sisa_anggaran` decimal(44,2)
+,`persentase` decimal(52,6)
+);
 
 -- --------------------------------------------------------
 
@@ -695,6 +755,51 @@ INSERT INTO `lkpd_apbd_lampiran_1` (`id`, `tahun_lkpd`, `id_kode_catatan`, `juml
 (395, 2010, 74, 7000000000.00, 6336302687.72),
 (396, 2010, 78, 0.00, 5938669880.00);
 
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `pajak_daerah`
+--
+
+CREATE TABLE `pajak_daerah` (
+  `id` int(5) NOT NULL,
+  `tahun` int(4) NOT NULL,
+  `id_kode_urut` int(2) NOT NULL,
+  `target` decimal(20,2) DEFAULT NULL,
+  `realisasi` decimal(20,2) DEFAULT NULL,
+  `tw1` decimal(4,2) DEFAULT NULL,
+  `tw2` decimal(4,2) DEFAULT NULL,
+  `tw3` decimal(4,2) DEFAULT NULL,
+  `tw4` decimal(4,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `kinerja_keuangan`
+--
+DROP TABLE IF EXISTS `kinerja_keuangan`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `kinerja_keuangan`  AS   (select `a`.`tahun_lkpd` AS `tahun`,`a`.`kode` AS `kinerja`,`a`.`anggaran` AS `target`,`a`.`realisasi` AS `realisasi`,`a`.`realisasi` / `a`.`anggaran` * 100 AS `ketercapaian` from ((select `la`.`tahun_lkpd` AS `tahun_lkpd`,left(`kc`.`kode_catatan`,2) AS `kode`,sum(`la`.`jumlah_anggaran`) AS `anggaran`,sum(`la`.`jumlah_realisasi`) AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,left(`kc`.`kode_catatan`,2) union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,left(`kc`.`kode_catatan`,4) AS `kode`,sum(`la`.`jumlah_anggaran`) AS `anggaran`,sum(`la`.`jumlah_realisasi`) AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,left(`kc`.`kode_catatan`,4) union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,`kc`.`kode_catatan` AS `kode`,sum(`la`.`jumlah_anggaran`) AS `anggaran`,sum(`la`.`jumlah_realisasi`) AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,`kc`.`kode_catatan` union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,'Derajat Desentralisasi' AS `kode`,sum(case when left(`kc`.`kode_catatan`,4) = '1.1.' then `la`.`jumlah_anggaran` else 0 end) / sum(case when left(`kc`.`kode_catatan`,2) = '1.' then `la`.`jumlah_anggaran` else 0 end) * 100 AS `anggaran`,sum(case when left(`kc`.`kode_catatan`,4) = '1.1.' then `la`.`jumlah_realisasi` else 0 end) / sum(case when left(`kc`.`kode_catatan`,2) = '1.' then `la`.`jumlah_realisasi` else 0 end) * 100 AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,'Derajat Desentralisasi' union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,'Ketergantungan Keuangan' AS `kode`,(sum(case when left(`kc`.`kode_catatan`,4) = '1.2.' then `la`.`jumlah_anggaran` else 0 end) + sum(case when left(`kc`.`kode_catatan`,4) = '1.3.' then `la`.`jumlah_anggaran` else 0 end)) / sum(case when left(`kc`.`kode_catatan`,2) = '1.' then `la`.`jumlah_anggaran` else 0 end) * 100 AS `anggaran`,(sum(case when left(`kc`.`kode_catatan`,4) = '1.2.' then `la`.`jumlah_realisasi` else 0 end) + sum(case when left(`kc`.`kode_catatan`,4) = '1.3.' then `la`.`jumlah_realisasi` else 0 end)) / sum(case when left(`kc`.`kode_catatan`,2) = '1.' then `la`.`jumlah_realisasi` else 0 end) * 100 AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,'Ketergantungan Keuangan' union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,'Kemandirian Keuangan' AS `kode`,sum(case when left(`kc`.`kode_catatan`,4) = '1.1.' then `la`.`jumlah_anggaran` else 0 end) / (sum(case when left(`kc`.`kode_catatan`,4) = '1.2.' then `la`.`jumlah_anggaran` else 0 end) + sum(case when left(`kc`.`kode_catatan`,4) = '1.3.' then `la`.`jumlah_anggaran` else 0 end)) * 100 AS `anggaran`,sum(case when left(`kc`.`kode_catatan`,4) = '1.1.' then `la`.`jumlah_realisasi` else 0 end) / (sum(case when left(`kc`.`kode_catatan`,4) = '1.2.' then `la`.`jumlah_realisasi` else 0 end) + sum(case when left(`kc`.`kode_catatan`,4) = '1.3.' then `la`.`jumlah_realisasi` else 0 end)) * 100 AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,'Kemandirian Keuangan' union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,'Efektifitas PAD' AS `kode`,sum(case when left(`kc`.`kode_catatan`,4) = '1.1.' then `la`.`jumlah_realisasi` else 0 end) / sum(case when left(`kc`.`kode_catatan`,4) = '1.1.' then `la`.`jumlah_anggaran` else 0 end) * 100 AS `anggaran`,sum(case when left(`kc`.`kode_catatan`,4) = '1.1.' then `la`.`jumlah_realisasi` else 0 end) / sum(case when left(`kc`.`kode_catatan`,4) = '1.1.' then `la`.`jumlah_anggaran` else 0 end) * 100 AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,'Efektifitas PAD') `a` left join `kode_catatan` `kc` on(`a`.`kode` = `kc`.`kode_catatan`)) where `a`.`kode` = 'Derajat Desentralisasi' or `a`.`kode` = 'Ketergantungan Keuangan' or `a`.`kode` = 'Kemandirian Keuangan' or `a`.`kode` = 'Efektifitas PAD' order by `a`.`tahun_lkpd`,`a`.`kode`)  ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `lampiran1_apbd`
+--
+DROP TABLE IF EXISTS `lampiran1_apbd`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lampiran1_apbd`  AS   (select `a`.`tahun` AS `tahun`,`a`.`kode` AS `kode`,`b`.`uraian` AS `uraian`,`a`.`anggaran` AS `anggaran`,`a`.`perubahan` AS `perubahan`,ifnull(round(`a`.`perubahan` - `a`.`anggaran`,2),0) AS `bertambah_berkurang`,ifnull(round((`a`.`perubahan` - `a`.`anggaran`) / `a`.`anggaran` * 100,2),0) AS `persentase`,`c`.`akronim` AS `jenis_apbd`,`b`.`id_kode_level` AS `id_kode_level`,`d`.`nama_level` AS `nama_level` from ((((select `a`.`tahun` AS `tahun`,left(`b`.`no_urut`,2) AS `kode`,sum(`a`.`jumlah_anggaran`) AS `anggaran`,sum(`a`.`jumlah_perubahan`) AS `perubahan`,`a`.`id_jenis_apbd` AS `id_jenis_apbd` from ((`apbd_lampiran_1` `a` join `kode_urut` `b` on(`a`.`id_kode_urut` = `b`.`id`)) join `jenis_apbd` `c` on(`a`.`id_jenis_apbd` = `c`.`id`)) group by `a`.`tahun`,left(`b`.`no_urut`,2),`a`.`id_jenis_apbd` union all select `a`.`tahun` AS `tahun`,left(`b`.`no_urut`,4) AS `kode`,sum(`a`.`jumlah_anggaran`) AS `anggaran`,sum(`a`.`jumlah_perubahan`) AS `perubahan`,`a`.`id_jenis_apbd` AS `id_jenis_apbd` from ((`apbd_lampiran_1` `a` join `kode_urut` `b` on(`a`.`id_kode_urut` = `b`.`id`)) join `jenis_apbd` `c` on(`a`.`id_jenis_apbd` = `c`.`id`)) group by `a`.`tahun`,left(`b`.`no_urut`,4),`a`.`id_jenis_apbd` union all select `a`.`tahun` AS `tahun`,`b`.`no_urut` AS `kode`,sum(`a`.`jumlah_anggaran`) AS `anggaran`,sum(`a`.`jumlah_perubahan`) AS `perubahan`,`a`.`id_jenis_apbd` AS `id_jenis_apbd` from ((`apbd_lampiran_1` `a` join `kode_urut` `b` on(`a`.`id_kode_urut` = `b`.`id`)) join `jenis_apbd` `c` on(`a`.`id_jenis_apbd` = `c`.`id`)) group by `a`.`tahun`,`b`.`no_urut`,`a`.`id_jenis_apbd` union all select `a`.`tahun` AS `tahun`,'5.5.' AS `kode`,sum(case when left(`b`.`no_urut`,2) = '4.' then `a`.`jumlah_anggaran` else 0 end) - sum(case when left(`b`.`no_urut`,2) = '5.' then `a`.`jumlah_anggaran` else 0 end) AS `anggaran`,sum(case when left(`b`.`no_urut`,2) = '4.' then `a`.`jumlah_perubahan` else 0 end) - sum(case when left(`b`.`no_urut`,2) = '5.' then `a`.`jumlah_perubahan` else 0 end) AS `perubahan`,`a`.`id_jenis_apbd` AS `id_jenis_apbd` from ((`apbd_lampiran_1` `a` join `kode_urut` `b` on(`a`.`id_kode_urut` = `b`.`id`)) join `jenis_apbd` `c` on(`a`.`id_jenis_apbd` = `c`.`id`)) group by `a`.`tahun`,'5.5.',`a`.`id_jenis_apbd` union all select `a`.`tahun` AS `tahun`,'6.2.9' AS `kode`,sum(case when left(`b`.`no_urut`,4) = '6.1.' then `a`.`jumlah_anggaran` else 0 end) - sum(case when left(`b`.`no_urut`,4) = '6.2.' then `a`.`jumlah_anggaran` else 0 end) AS `anggaran`,sum(case when left(`b`.`no_urut`,4) = '6.1.' then `a`.`jumlah_perubahan` else 0 end) - sum(case when left(`b`.`no_urut`,4) = '6.2.' then `a`.`jumlah_perubahan` else 0 end) AS `perubahan`,`a`.`id_jenis_apbd` AS `id_jenis_apbd` from ((`apbd_lampiran_1` `a` join `kode_urut` `b` on(`a`.`id_kode_urut` = `b`.`id`)) join `jenis_apbd` `c` on(`a`.`id_jenis_apbd` = `c`.`id`)) group by `a`.`tahun`,'6.2.9',`a`.`id_jenis_apbd` union all select `a`.`tahun` AS `tahun`,'6.3.' AS `kode`,sum(case when left(`b`.`no_urut`,2) = '4.' then `a`.`jumlah_anggaran` else 0 end) - sum(case when left(`b`.`no_urut`,2) = '5.' then `a`.`jumlah_anggaran` else 0 end) + (sum(case when left(`b`.`no_urut`,4) = '6.1.' then `a`.`jumlah_anggaran` else 0 end) - sum(case when left(`b`.`no_urut`,4) = '6.2.' then `a`.`jumlah_anggaran` else 0 end)) AS `anggaran`,sum(case when left(`b`.`no_urut`,2) = '4.' then `a`.`jumlah_perubahan` else 0 end) - sum(case when left(`b`.`no_urut`,2) = '5.' then `a`.`jumlah_perubahan` else 0 end) + (sum(case when left(`b`.`no_urut`,4) = '6.1.' then `a`.`jumlah_perubahan` else 0 end) - sum(case when left(`b`.`no_urut`,4) = '6.2.' then `a`.`jumlah_perubahan` else 0 end)) AS `perubahan`,`a`.`id_jenis_apbd` AS `id_jenis_apbd` from ((`apbd_lampiran_1` `a` join `kode_urut` `b` on(`a`.`id_kode_urut` = `b`.`id`)) join `jenis_apbd` `c` on(`a`.`id_jenis_apbd` = `c`.`id`)) group by `a`.`tahun`,'6.3.',`a`.`id_jenis_apbd`) `a` join `kode_urut` `b` on(`a`.`kode` = `b`.`no_urut`)) join `jenis_apbd` `c` on(`a`.`id_jenis_apbd` = `c`.`id`)) left join `kode_level` `d` on(`b`.`id_kode_level` = `d`.`id`)) where `b`.`id_kode_level` in (1,2,3) order by `a`.`tahun`,`b`.`no_urut`)  ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `lampiran1_lkpd`
+--
+DROP TABLE IF EXISTS `lampiran1_lkpd`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lampiran1_lkpd`  AS   (select `kc`.`id_kode_level` AS `id_kode_level`,`a`.`tahun_lkpd` AS `tahun_lkpd`,`a`.`kode` AS `kode`,`kc`.`uraian` AS `uraian`,`a`.`anggaran` AS `anggaran`,`a`.`realisasi` AS `realisasi`,case when `a`.`anggaran` = 0 then 0 else `a`.`anggaran` - `a`.`realisasi` end AS `sisa_anggaran`,case when `a`.`anggaran` = 0 then 0 else `a`.`realisasi` / `a`.`anggaran` * 100 end AS `persentase` from ((select `la`.`tahun_lkpd` AS `tahun_lkpd`,left(`kc`.`kode_catatan`,2) AS `kode`,sum(`la`.`jumlah_anggaran`) AS `anggaran`,sum(`la`.`jumlah_realisasi`) AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,left(`kc`.`kode_catatan`,2) union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,left(`kc`.`kode_catatan`,4) AS `kode`,sum(`la`.`jumlah_anggaran`) AS `anggaran`,sum(`la`.`jumlah_realisasi`) AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,left(`kc`.`kode_catatan`,4) union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,`kc`.`kode_catatan` AS `kode`,sum(`la`.`jumlah_anggaran`) AS `anggaran`,sum(`la`.`jumlah_realisasi`) AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,`kc`.`kode_catatan` union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,'333330' AS `kode`,sum(case when left(`kc`.`kode_catatan`,2) = '2.' then `la`.`jumlah_anggaran` else 0 end) + sum(case when left(`kc`.`kode_catatan`,2) = '3.' then `la`.`jumlah_anggaran` else 0 end) AS `anggaran`,sum(case when left(`kc`.`kode_catatan`,2) = '2.' then `la`.`jumlah_realisasi` else 0 end) + sum(case when left(`kc`.`kode_catatan`,2) = '3.' then `la`.`jumlah_realisasi` else 0 end) AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,'333330' union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,'333331' AS `kode`,sum(case when left(`kc`.`kode_catatan`,2) = '1.' then `la`.`jumlah_anggaran` else 0 end) - (sum(case when left(`kc`.`kode_catatan`,2) = '2.' then `la`.`jumlah_anggaran` else 0 end) + sum(case when left(`kc`.`kode_catatan`,2) = '3.' then `la`.`jumlah_anggaran` else 0 end)) AS `anggaran`,sum(case when left(`kc`.`kode_catatan`,2) = '1.' then `la`.`jumlah_realisasi` else 0 end) - (sum(case when left(`kc`.`kode_catatan`,2) = '2.' then `la`.`jumlah_realisasi` else 0 end) + sum(case when left(`kc`.`kode_catatan`,2) = '3.' then `la`.`jumlah_realisasi` else 0 end)) AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,'333331' union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,'444441' AS `kode`,sum(case when left(`kc`.`kode_catatan`,2) = '1.' then `la`.`jumlah_anggaran` else 0 end) - (sum(case when left(`kc`.`kode_catatan`,2) = '2.' then `la`.`jumlah_anggaran` else 0 end) + sum(case when left(`kc`.`kode_catatan`,2) = '3.' then `la`.`jumlah_anggaran` else 0 end)) + (sum(case when left(`kc`.`kode_catatan`,4) = '4.1.' then `la`.`jumlah_anggaran` else 0 end) - sum(case when left(`kc`.`kode_catatan`,4) = '4.2.' then `la`.`jumlah_anggaran` else 0 end)) AS `anggaran`,sum(case when left(`kc`.`kode_catatan`,2) = '1.' then `la`.`jumlah_realisasi` else 0 end) - (sum(case when left(`kc`.`kode_catatan`,2) = '2.' then `la`.`jumlah_realisasi` else 0 end) + sum(case when left(`kc`.`kode_catatan`,2) = '3.' then `la`.`jumlah_realisasi` else 0 end)) + (sum(case when left(`kc`.`kode_catatan`,4) = '4.1.' then `la`.`jumlah_realisasi` else 0 end) - sum(case when left(`kc`.`kode_catatan`,4) = '4.2.' then `la`.`jumlah_realisasi` else 0 end)) AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,'444441' union all select `la`.`tahun_lkpd` AS `tahun_lkpd`,'444440' AS `kode`,sum(case when left(`kc`.`kode_catatan`,4) = '4.1.' then `la`.`jumlah_anggaran` else 0 end) - sum(case when left(`kc`.`kode_catatan`,4) = '4.2.' then `la`.`jumlah_anggaran` else 0 end) AS `anggaran`,sum(case when left(`kc`.`kode_catatan`,4) = '4.1.' then `la`.`jumlah_realisasi` else 0 end) - sum(case when left(`kc`.`kode_catatan`,4) = '4.2.' then `la`.`jumlah_realisasi` else 0 end) AS `realisasi` from (`lkpd_apbd_lampiran_1` `la` join `kode_catatan` `kc` on(`la`.`id_kode_catatan` = `kc`.`id`)) group by `la`.`tahun_lkpd`,'444440') `a` left join `kode_catatan` `kc` on(`a`.`kode` = `kc`.`kode_catatan`)) order by `a`.`tahun_lkpd`,`a`.`kode`)  ;
+
 --
 -- Indexes for dumped tables
 --
@@ -736,6 +841,12 @@ ALTER TABLE `lkpd_apbd_lampiran_1`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeks untuk tabel `pajak_daerah`
+--
+ALTER TABLE `pajak_daerah`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
@@ -761,19 +872,25 @@ ALTER TABLE `kode_catatan`
 -- AUTO_INCREMENT untuk tabel `kode_level`
 --
 ALTER TABLE `kode_level`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `kode_urut`
 --
 ALTER TABLE `kode_urut`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT untuk tabel `lkpd_apbd_lampiran_1`
 --
 ALTER TABLE `lkpd_apbd_lampiran_1`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=397;
+
+--
+-- AUTO_INCREMENT untuk tabel `pajak_daerah`
+--
+ALTER TABLE `pajak_daerah`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
