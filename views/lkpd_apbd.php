@@ -146,7 +146,7 @@ if ($years_result->num_rows > 0) {
 }
 ?>
 
-<h2>Lampiran I - LKPD</h2>
+<h2 style="text-align: center;">Lampiran I - LKPD</h2>
 
 <!-- Year Filter Form -->
 <form method="GET" action="index.php">
@@ -182,55 +182,57 @@ if (isset($_GET['error'])): ?>
 <?php
 if ($result->num_rows > 0):
 ?>
-    <table>
-        <thead>
-            <tr>
-                <th style="display: none;">ID</th>
-                <th style="text-align: center;">Tahun</th>
-                <th style="text-align: center;">Kode</th>
-                <th style="text-align: center;">Uraian</th>
-                <th style="text-align: center;">Anggaran</th>
-                <th style="text-align: center;">Realisasi</th>
-                <th style="text-align: center;">Persentase</th>
-                <th style="text-align: center;">Sisa Anggaran</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            while ($row = $result->fetch_assoc()):
-                $is_level_1_or_2 = ($row['id_kode_level'] == 1 || $row['id_kode_level'] == 2);
-
-                $tahun_display = htmlspecialchars($row['tahun_lkpd']);
-                $kode_display = htmlspecialchars($row['kode']);
-                $uraian_display = htmlspecialchars($row['uraian']);
-                $anggaran_display = htmlspecialchars(number_format($row['anggaran'] ?? 0, 2, ',', '.'));
-                $realisasi_display = htmlspecialchars(number_format($row['realisasi'] ?? 0, 2, ',', '.'));
-                $sisaanggaran_display = htmlspecialchars(number_format($row['sisa_anggaran'] ?? 0, 2, ',', '.'));
-                $persentase_display = htmlspecialchars(number_format($row['persentase'] ?? 0, 2, ',', '.')) . '%';
-
-                if ($is_level_1_or_2) {
-                    $tahun_display = '<strong>' . $tahun_display . '</strong>';
-                    $kode_display = '<strong>' . $kode_display . '</strong>';
-                    $uraian_display = '<strong>' . $uraian_display . '</strong>';
-                    $anggaran_display = '<strong>' . $anggaran_display . '</strong>';
-                    $realisasi_display = '<strong>' . $realisasi_display . '</strong>';
-                    $sisaanggaran_display = '<strong>' . $sisaanggaran_display . '</strong>';
-                    $persentase_display = '<strong>' . $persentase_display . '</strong>';
-                }
-            ?>
+    <div>
+        <table>
+            <thead>
                 <tr>
-                    <td style="display: none;"><?php echo htmlspecialchars($row['id_kode_level']); ?></td>
-                    <td><?php echo $tahun_display; ?></td>
-                    <td><?php echo $kode_display; ?></td>
-                    <td><?php echo $uraian_display; ?></td>
-                    <td style="text-align:right"><?php echo $anggaran_display; ?></td>
-                    <td style="text-align:right"><?php echo $realisasi_display; ?></td>
-                    <td style="text-align:right"><?php echo $persentase_display; ?></td>
-                    <td style="text-align:right"><?php echo $sisaanggaran_display; ?></td>
+                    <th style="display: none;">ID</th>
+                    <th style="text-align: center;">Tahun</th>
+                    <th style="text-align: center;">Kode</th>
+                    <th style="text-align: center;">Uraian</th>
+                    <th style="text-align: center;">Anggaran</th>
+                    <th style="text-align: center;">Realisasi</th>
+                    <th style="text-align: center;">Persentase</th>
+                    <th style="text-align: center;">Sisa Anggaran</th>
                 </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php
+                while ($row = $result->fetch_assoc()):
+                    $is_level_1_or_2 = ($row['id_kode_level'] == 1 || $row['id_kode_level'] == 2);
+
+                    $tahun_display = htmlspecialchars($row['tahun_lkpd']);
+                    $kode_display = htmlspecialchars($row['kode']);
+                    $uraian_display = htmlspecialchars($row['uraian']);
+                    $anggaran_display = htmlspecialchars(number_format($row['anggaran'] ?? 0, 2, ',', '.'));
+                    $realisasi_display = htmlspecialchars(number_format($row['realisasi'] ?? 0, 2, ',', '.'));
+                    $sisaanggaran_display = htmlspecialchars(number_format($row['sisa_anggaran'] ?? 0, 2, ',', '.'));
+                    $persentase_display = htmlspecialchars(number_format($row['persentase'] ?? 0, 2, ',', '.')) . '%';
+
+                    if ($is_level_1_or_2) {
+                        $tahun_display = '<strong>' . $tahun_display . '</strong>';
+                        $kode_display = '<strong>' . $kode_display . '</strong>';
+                        $uraian_display = '<strong>' . $uraian_display . '</strong>';
+                        $anggaran_display = '<strong>' . $anggaran_display . '</strong>';
+                        $realisasi_display = '<strong>' . $realisasi_display . '</strong>';
+                        $sisaanggaran_display = '<strong>' . $sisaanggaran_display . '</strong>';
+                        $persentase_display = '<strong>' . $persentase_display . '</strong>';
+                    }
+                ?>
+                    <tr>
+                        <td style="display: none;"><?php echo htmlspecialchars($row['id_kode_level']); ?></td>
+                        <td><?php echo $tahun_display; ?></td>
+                        <td><?php echo $kode_display; ?></td>
+                        <td><?php echo $uraian_display; ?></td>
+                        <td style="text-align:right"><?php echo $anggaran_display; ?></td>
+                        <td style="text-align:right"><?php echo $realisasi_display; ?></td>
+                        <td style="text-align:right"><?php echo $persentase_display; ?></td>
+                        <td style="text-align:right"><?php echo $sisaanggaran_display; ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
 <?php else: ?>
     <p>Belum ada data.</p>
 <?php endif; ?>

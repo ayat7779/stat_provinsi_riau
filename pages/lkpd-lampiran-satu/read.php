@@ -50,7 +50,7 @@ if ($years_result->num_rows > 0) {
 }
 ?>
 
-<h2>Lampiran I - LKPD</h2>
+<h2 style="text-align: center;">Lampiran I - LKPD</h2>
 
 <div class="button-group">
     <button><a href="../../index.php">Home</a></button>

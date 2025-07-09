@@ -50,17 +50,17 @@ body {
     min-height: 100vh;
     padding: 40px 0;
     box-sizing: border-box;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Mencegah body scroll horizontal */
     overflow-y: auto;
     position: relative;
 }
 body::before {
-    content: none;
+    content: none; /* Hapus elemen artistik */
 }
 
 .container {
     width: 90%;
-    max-width: 1200px;
+    max-width: 1600px; /* Kembali ke lebar maksimum standar */
     margin: 0 auto;
     background: var(--card-bg);
     padding: 40px;
@@ -71,10 +71,13 @@ body::before {
     z-index: 1;
     overflow: hidden;
     border: 1px solid var(--border-color);
+    /* Hapus properti glassmorphism */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 .container::before,
 .container::after {
-    content: none;
+    content: none; /* Hapus elemen artistik */
 }
 
 /* --- 3. Heading (H1 & H2) --- */
@@ -90,10 +93,7 @@ h1 {
     background: none;
     -webkit-background-clip: unset;
     -webkit-text-fill-color: unset;
-    animation: none;
-}
-@keyframes pulseNeon {
-    /* Hapus isi keyframes ini */
+    animation: none; /* Hapus animasi neonGlow */
 }
 
 form h2 {
@@ -120,16 +120,13 @@ nav {
     gap: 25px;
     flex-wrap: wrap;
     border: none;
-    backdrop-filter: none;
+    backdrop-filter: none; /* Hapus glassmorphism */
     -webkit-backdrop-filter: none;
     position: relative;
     overflow: hidden;
 }
 nav::before {
-    content: none;
-}
-@keyframes scanLine {
-    /* Hapus isi keyframes ini */
+    content: none; /* Hapus elemen artistik */
 }
 
 nav a {
@@ -179,7 +176,7 @@ nav a:hover::before {
 }
 .dropbtn {
     background: var(--input-bg);
-    color: var(--text-dark);
+    color: var(--text-dark); /* Mengatur warna teks tombol dropdown menjadi hitam */
     padding: 12px 20px;
     font-size: 1em;
     border: 1px solid var(--border-color);
@@ -200,7 +197,7 @@ nav a:hover::before {
 }
 form .dropdown .dropbtn {
     background: var(--input-bg);
-    color: var(--text-dark);
+    color: var(--text-dark); /* Pastikan juga teks dropbtn dalam form hitam */
     border: 1px solid var(--border-color);
     box-shadow: none;
 }
@@ -223,7 +220,7 @@ form .dropdown .dropbtn:focus {
     font-size: 0.6em;
     margin-left: 10px;
     transition: transform var(--transition-normal);
-    color: var(--primary-dark);
+    color: var(--text-dark); /* Mengatur warna panah dropdown menjadi hitam */
     text-shadow: none;
 }
 .dropdown.active .dropbtn::after {
@@ -245,9 +242,10 @@ form .dropdown .dropbtn:focus {
     overflow: hidden;
     padding: 10px 0;
     border: 1px solid var(--border-color);
+    position: absolute;
 }
 .dropdown-content a {
-    color: var(--text-dark);
+    color: var(--text-dark); /* Mengatur warna teks item dropdown menjadi hitam */
     padding: 10px 20px;
     text-decoration: none;
     display: block;
@@ -277,12 +275,9 @@ form .dropdown .dropbtn:focus {
     transform: translateX(0);
     text-shadow: none;
 }
-.dropdown-content a:hover::before {
-    transform: translateX(0);
-}
 .dropdown-content a.selected {
     background: var(--primary-color);
-    color: #FFFFFF;
+    color: #FFFFFF; /* Teks putih untuk item yang terpilih */
     font-weight: 600;
     box-shadow: none;
     transform: translateX(0);
@@ -318,122 +313,73 @@ hr {
     position: relative;
 }
 hr::before {
-    content: none;
-}
-@keyframes pulseGlow {
-    /* Hapus isi keyframes ini */
+    content: none; /* Hapus elemen artistik */
 }
 
-/* --- 7. Tabel (Revisi Lengkap untuk Responsif & Overflow Fix) --- */
-.table-responsive {
-    overflow-x: auto; /* Memungkinkan gulir horizontal di desktop/tablet */
-    -webkit-overflow-scrolling: touch;
-    width: 100%; /* Pastikan kontainer mengambil lebar penuh dari parent-nya */
-    margin-top: 40px;
-    box-shadow: var(--shadow-light);
-    border-radius: var(--radius-base);
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    padding-bottom: 5px; /* Tambahkan sedikit padding bawah untuk scrollbar */
-}
-
+/* --- 7. Tabel --- */
 table {
     width: 100%;
-    min-width: 1050px; /* Tingkatkan lebar minimum. Sesuaikan jika masih terpotong. */
     border-collapse: separate;
     border-spacing: 0;
-    overflow: hidden; /* Penting untuk border-radius di dalam .table-responsive */
+    margin-top: 40px; /* Margin lebih besar */
+    box-shadow: var(--shadow-glass);
+    border-radius: var(--radius-base);
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.05); /* Background tabel lebih transparan */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 table thead tr {
-    background: var(--bg-dark);
-    color: var(--text-light);
-    box-shadow: none;
-    position: relative;
-    z-index: 2;
+    background: var(--gradient-primary); /* Gradien yang kuat */
+    color: #FFFFFF; /* Teks putih solid */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
 table th,
 table td {
-    padding: 15px 20px;
+    padding: 20px 25px; /* Padding lebih besar */
     text-align: left;
-    border-bottom: 1px solid var(--border-color);
-    vertical-align: middle;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Border lebih halus */
 }
 
 table th {
-    font-weight: 600;
-    font-size: 1em;
-    letter-spacing: normal;
-    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.15em;
+    letter-spacing: 0.5px; /* Jarak antar huruf */
+    text-transform: uppercase; /* Kapital */
     position: relative;
-    padding-bottom: 15px;
-    text-shadow: none;
-    white-space: nowrap; /* Pastikan header tidak pecah baris */
+    padding-bottom: 25px; /* Ruang untuk efek border bawah */
+}
+table th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; /* Awalnya 0 */
+    height: 3px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease-out;
+}
+table th:hover::after {
+    width: 80%; /* Lebar saat hover */
 }
 
 table tbody tr:nth-child(even) {
-    background-color: var(--input-bg);
+    background-color: rgba(249, 250, 251, 0.03); /* Lebih transparan */
 }
 
 table tbody tr:nth-child(odd) {
-    background-color: var(--card-bg);
+    background-color: rgba(255, 255, 255, 0.01); /* Lebih transparan */
 }
 
 table tbody tr:hover {
-    background-color: rgba(74, 144, 226, 0.08) !important;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-light);
+    background-color: rgba(108, 99, 255, 0.1) !important; /* Hover yang jelas */
+    transform: translateY(-3px); /* Efek naik */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Bayangan lebih kuat */
     transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-/* Kolom tertentu agar tidak terlalu lebar/menyempit */
-table th:nth-child(1), /* TAHUN */
-table td:nth-child(1) {
-    width: 80px;
-    min-width: 80px;
-    white-space: nowrap;
-}
-table th:nth-child(2), /* CATATAN */
-table td:nth-child(2) {
-    width: 100px;
-    min-width: 100px;
-    white-space: nowrap;
-}
-table th:nth-child(3), /* URAIAN */
-table td:nth-child(3) {
-    width: auto;
-    min-width: 200px; /* Tingkatkan min-width agar lebih banyak teks terlihat */
-    max-width: 350px; /* Batasi max-width agar tidak terlalu mendominasi */
-    word-wrap: break-word;
-    white-space: normal; /* Izinkan pecah baris untuk konten uraian */
-}
-table th:nth-child(4), /* ANGGARAN */
-table td:nth-child(4),
-table th:nth-child(5), /* REALISASI */
-table td:nth-child(5),
-table th:nth-child(7), /* SISA ANGGARAN */
-table td:nth-child(7) {
-    min-width: 150px; /* Beri min-width yang cukup untuk angka besar */
-    white-space: nowrap; /* Angka dan persentase sebaiknya tidak pecah baris */
-}
-
-table th:nth-child(6), /* PERSENTASE */
-table td:nth-child(6) {
-    width: 100px;
-    min-width: 100px;
-    white-space: nowrap;
-}
-table th:last-child, /* AKSI */
-table td:last-child {
-    width: 120px;
-    min-width: 120px;
-    text-align: center;
-    white-space: nowrap;
-    padding-left: 5px; /* Kurangi padding untuk mengakomodasi tombol */
-    padding-right: 5px; /* Kurangi padding untuk mengakomodasi tombol */
 }
 
 /* --- 8. Kolom Aksi Tabel --- */
@@ -441,38 +387,46 @@ table td.actions {
     text-align: center;
     white-space: nowrap;
 }
+
 table td.actions a {
-    padding: 8px 15px;
-    border-radius: var(--radius-base);
-    font-weight: 500;
-    transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
-    margin: 0 5px;
-    box-shadow: none;
-    text-transform: capitalize;
+    padding: 12px 22px; /* Padding lebih besar */
+    border-radius: 10px; /* Radius lebih besar */
+    font-weight: 600;
+    transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    margin: 0 8px; /* Margin lebih besar */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-transform: uppercase;
     font-size: 0.9em;
-    color: #FFFFFF;
+    text-decoration: none;
 }
+
 table td.actions .edit {
-    background: var(--primary-color);
+    background: linear-gradient(45deg, #FFD700, #FFA500); /* Gradien untuk edit */
+    color: #333; /* Teks gelap */
 }
+
 table td.actions .edit:hover {
-    background: var(--primary-dark);
+    background: linear-gradient(45deg, #FFB900, #FF7F50);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-light);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
+
 table td.actions .delete {
-    background: var(--danger-color);
+    background: linear-gradient(45deg, #E3342F, #D01F1F); /* Gradien untuk delete */
+    color: var(--text-light);
 }
+
 table td.actions .delete:hover {
-    background: #C82333;
+    background: linear-gradient(45deg, #C82333, #B01A1A);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-light);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
+
 
 /* --- 9. Form --- */
 form {
     background: var(--card-bg);
-    backdrop-filter: none;
+    backdrop-filter: none; /* Hapus glassmorphism */
     -webkit-backdrop-filter: none;
     padding: 30px;
     border-radius: var(--radius-base);
@@ -502,7 +456,7 @@ form select {
     font-size: 1em;
     box-sizing: border-box;
     background-color: var(--input-bg);
-    color: var(--text-dark);
+    color: var(--text-dark); /* Mengatur warna teks input/select menjadi hitam */
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     font-family: 'Inter', sans-serif;
     text-shadow: none;
@@ -515,7 +469,7 @@ form select:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
     background-color: var(--input-bg);
-    color: var(--text-dark);
+    color: var(--text-dark); /* Warna teks tetap hitam saat fokus */
 }
 form input::placeholder,
 form textarea::placeholder {
@@ -563,10 +517,10 @@ form button:hover {
     box-shadow: var(--shadow-light);
 }
 .button-group button a {
-    color: #FFFFFF;
+    color: #000000;
     text-decoration: none;
     display: block;
-    padding: 0;
+    padding: 10px 15px;
     line-height: 1;
 }
 
@@ -607,7 +561,7 @@ form button:hover {
     gap: 12px;
     box-shadow: var(--shadow-light);
     border: 1px solid;
-    backdrop-filter: none;
+    backdrop-filter: none; /* Hapus glassmorphism */
     -webkit-backdrop-filter: none;
     color: var(--text-dark);
     text-shadow: none;
@@ -666,7 +620,7 @@ form button:hover {
         padding: 10px 15px;
         font-size: 0.95em;
         border-bottom: none;
-        border-left: 3px solid transparent; /* Kembali ke garis kiri untuk vertikal */
+        border-left: 3px solid transparent;
         transform: none;
     }
     .main-menu a:hover {
@@ -681,7 +635,7 @@ form button:hover {
         transform: none;
     }
     .main-menu h3 {
-        display: block; /* Tampilkan kembali h3 di mobile */
+        display: block;
         text-align: left;
         margin-bottom: 10px;
         font-size: 1.05em;
@@ -728,22 +682,22 @@ form button:hover {
 
     /* Tabel Responsif (Mengubah menjadi kartu untuk ponsel) */
     .table-responsive {
-        overflow-x: hidden; /* Sembunyikan gulir horizontal saat mode kartu */
+        overflow-x: hidden;
         border: none;
         box-shadow: none;
         border-radius: 0;
         background-color: transparent;
-        padding-bottom: 0; /* Hapus padding bawah di mobile */
+        padding-bottom: 0;
     }
 
     table {
         border: none;
         box-shadow: none;
         border-radius: 0;
-        min-width: unset; /* Hapus min-width agar bisa transform ke kartu */
+        min-width: unset;
     }
     table thead {
-        display: none; /* Sembunyikan header tabel di mobile */
+        display: none;
     }
     table,
     table tbody,
@@ -761,7 +715,7 @@ form button:hover {
         padding: 15px;
         display: flex;
         flex-direction: column;
-        backdrop-filter: none;
+        backdrop-filter: none; /* Hapus glassmorphism */
         -webkit-backdrop-filter: none;
     }
     table tr:hover {
@@ -775,7 +729,7 @@ form button:hover {
         position: relative;
         padding-left: 50%;
         word-wrap: break-word;
-        white-space: normal; /* Penting: izinkan teks pecah baris di sel data */
+        white-space: normal;
     }
     table td::before {
         content: attr(data-label);
@@ -783,7 +737,7 @@ form button:hover {
         left: 0;
         width: 45%;
         padding-right: 10px;
-        white-space: nowrap; /* Label tidak pecah baris */
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         font-weight: 600;
@@ -858,8 +812,8 @@ form button:hover {
     h1 {
         font-size: 1.8em;
     }
-    form h2 {
-        font-size: 1.4em;
+    nav {
+        gap: 10px;
     }
     nav a {
         width: calc(100% - 30px);
@@ -955,7 +909,7 @@ form button:hover {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     display: flex;
-    flex-direction: row; /* Default: satu baris */
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 25px;
@@ -976,7 +930,7 @@ form button:hover {
     padding: 0;
     margin: 0;
     display: flex;
-    flex-direction: row; /* Default: satu baris */
+    flex-direction: row;
     gap: 25px;
     flex-wrap: wrap;
     justify-content: center;
@@ -998,7 +952,7 @@ form button:hover {
     white-space: nowrap;
     text-shadow: none;
     border-left: none;
-    border-bottom: 3px solid transparent; /* Garis bawah sebagai indikator hover/aktif di desktop */
+    border-bottom: 3px solid transparent;
 }
 .main-menu a::before {
     content: '';
@@ -1007,7 +961,7 @@ form button:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: var(--accent-color);
+    background: var(--primary-color);
     transform: translateX(-100%);
     transition: transform var(--transition-fast) ease-out;
     z-index: -1;
@@ -1031,7 +985,7 @@ form button:hover {
     background: var(--primary-color);
     color: #FFFFFF;
     font-weight: 600;
-    border-bottom: 3px solid var(--tertiary-color); /* Garis bawah yang jelas untuk aktif di desktop */
+    border-bottom: 3px solid var(--tertiary-color);
     border-left: none;
     transform: translateY(0);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);

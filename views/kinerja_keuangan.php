@@ -132,7 +132,7 @@ if ($years_result->num_rows > 0) {
 }
 ?>
 
-<h2>KINERJA KEUANGAN PROVINSI RIAU</h2>
+<h2 style="text-align: center;">KINERJA KEUANGAN PROVINSI RIAU</h2>
 
 <form method="GET" action="">
     <label for="tahun">Filter Tahun:</label>

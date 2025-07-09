@@ -9,7 +9,7 @@ $result = $conn->query($sql);
 
 ?>
 
-<h2>Daftar Level Kode</h2>
+<h2 style="text-align: center;">Daftar Level Kode</h2>
 <div class="button-group">
     <button><a href="../../index.php">Home</a></button>
     <button><a href="create.php">Tambah Data</a></button>
