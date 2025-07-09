@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $success_message = "Data berhasil disimpan!";
                 $uraian = $akronim = "";
             } else {
-                echo "<p class='error-message'>Ada yang salah saat menyimpan data. Silakan coba lagi nanti: </p>". $stmt->error;
+                echo "<p class='error-message'>Ada yang salah saat menyimpan data. Silakan coba lagi nanti: </p>" . $stmt->error;
             }
             $stmt->close();
         }

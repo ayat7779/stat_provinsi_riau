@@ -15,8 +15,8 @@ $result = $conn->query($sql);
 
 <h2 style="text-align: center;">Daftar Kode Urut APBD</h2>
 <div class="button-group">
-    <button><a href="../../index.php">Home</a></button>
-    <button><a href="create.php">Tambah Data</a></button>
+    <a href="../../index.php">Home</a>
+    <a href="create.php">Tambah Data</a>
 </div>
 
 <?php

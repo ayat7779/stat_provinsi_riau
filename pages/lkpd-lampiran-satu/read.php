@@ -32,7 +32,7 @@ if ($stmt === false) {
 
 // Bind parameter if a year is selected
 if ($selected_year != '') {
-    $stmt->bind_param("s", $selected_year); // "s" for string, adjust if tahun_lkpd is integer
+    $stmt->bind_param("s", $selected_year);
 }
 
 // Execute the statement
@@ -53,8 +53,8 @@ if ($years_result->num_rows > 0) {
 <h2 style="text-align: center;">Lampiran I - LKPD</h2>
 
 <div class="button-group">
-    <button><a href="../../index.php">Home</a></button>
-    <button><a href="create.php">Tambah Data</a></button>
+    <a href="../../index.php">Home</a>
+    <a href="create.php">Tambah Data</a>
 </div>
 
 <!-- Year Filter Form -->

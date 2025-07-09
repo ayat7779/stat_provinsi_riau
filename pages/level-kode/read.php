@@ -11,8 +11,8 @@ $result = $conn->query($sql);
 
 <h2 style="text-align: center;">Daftar Level Kode</h2>
 <div class="button-group">
-    <button><a href="../../index.php">Home</a></button>
-    <button><a href="create.php">Tambah Data</a></button>
+    <a href="../../index.php">Home</a>
+    <a href="create.php">Tambah Data</a>
 </div>
 
 <?php
@@ -39,7 +39,7 @@ if ($result->num_rows > 0):
                 <th style="display: none;">ID</th>
                 <th>Nama Level</th>
                 <th>Akronim</th>
-                <th>Aksi</th>
+                <th style="text-align: center;">Aksi</th>
             </tr>
         </thead>
         <tbody>
