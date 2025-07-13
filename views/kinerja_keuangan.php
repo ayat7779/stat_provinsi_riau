@@ -158,7 +158,6 @@ if ($years_result->num_rows > 0) {
     </select>
 
     <input type="hidden" name="page" value="kinerja_keuangan">
-
     <noscript><button type="submit">Terapkan Filter</button></noscript>
 </form>
 
