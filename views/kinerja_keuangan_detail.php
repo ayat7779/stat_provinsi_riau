@@ -1,5 +1,4 @@
 <?php
-// --- Inisialisasi Variabel dan Filter Default ---
 $sql_query = "";
 $report_title = "Pilih Indikator Keuangan Daerah";
 $chart_labels = []; // Untuk label sumbu X (Tahun)
