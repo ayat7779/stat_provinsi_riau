@@ -30,7 +30,7 @@ if ($selected_start_year > $selected_end_year) {
 // --- Definisi Indikator dan Logika Query ---
 $indicators = [
     "desentralisasi" => [
-        "title" => "Derajat Desentralisasi = PAD / Total Pendapatan Daerah",
+        "title" => "Derajat Desentralisasi",
         "nominal_data_keys" => [
             "pad_agr" => "PAD (Anggaran)",
             "totalpendapatan_agr" => "Total Pendapatan (Anggaran)",
@@ -45,7 +45,7 @@ $indicators = [
         "y_axis_label_percentage" => "Persentase (%)"
     ],
     "ketergantungan" => [
-        "title" => "Ketergantungan Keuangan = Pendapatan Transfer / Total Pendapatan",
+        "title" => "Ketergantungan Keuangan",
         "nominal_data_keys" => [
             "transfer_agr" => "Transfer (Anggaran)",
             "totalpendapatan_agr" => "Total Pendapatan (Anggaran)",
@@ -60,7 +60,7 @@ $indicators = [
         "y_axis_label_percentage" => "Persentase (%)"
     ],
     "kemandirian" => [
-        "title" => "Kemandirian Keuangan = PAD / (Transfer Pusat + Provinsi + Pinjaman)",
+        "title" => "Kemandirian Keuangan",
         "nominal_data_keys" => [
             "pad_agr" => "PAD (Anggaran)",
             "transfer_agr" => "Transfer (Anggaran)",
@@ -75,7 +75,7 @@ $indicators = [
         "y_axis_label_percentage" => "Persentase (%)"
     ],
     "efektivitas" => [
-        "title" => "Efektivitas PAD = Realisasi PAD / Target PAD",
+        "title" => "Efektivitas PAD",
         "nominal_data_keys" => [
             "pad_real" => "Realisasi PAD",
             "pad_agr" => "Target PAD"
