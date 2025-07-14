@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 07 Jul 2025 pada 03.55
+-- Waktu pembuatan: 14 Jul 2025 pada 09.38
 -- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.2.12
+-- Versi PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -101,7 +101,25 @@ INSERT INTO `apbd_lampiran_1` (`id`, `tahun`, `id_kode_urut`, `jumlah_anggaran`,
 (72, 2022, 52, 424164000000.00, 427420807600.00, 2),
 (73, 2022, 55, 125000000000.00, 983967097722.00, 2),
 (74, 2022, 60, 125000000000.00, 125000000000.00, 2),
-(75, 2021, 3, 3392086798388.00, 3312414331190.00, 2);
+(75, 2021, 3, 3392086798388.00, 3312414331190.00, 2),
+(76, 2021, 4, 21517055000.00, 17215784040.00, 2),
+(77, 2021, 5, 128158256355.00, 117402606804.00, 2),
+(78, 2021, 6, 504070170485.00, 567645306912.00, 2),
+(79, 2021, 8, 4983665522101.00, 5166277886478.00, 2),
+(80, 2021, 12, 3251000000.00, 2735000000.00, 2),
+(81, 2021, 18, 2380014876804.00, 2316900442067.00, 2),
+(82, 2021, 27, 2438014768039.00, 2708818178640.00, 2),
+(83, 2021, 21, 1435050331262.00, 1458940674425.00, 2),
+(84, 2021, 22, 40481810000.00, 61529530000.00, 2),
+(85, 2021, 26, 112132178.00, 801982178.00, 2),
+(86, 2021, 28, 201417479525.00, 337164041221.00, 2),
+(87, 2021, 48, 217228326704.00, 280525464255.00, 2),
+(88, 2021, 49, 529988725248.00, 577701191645.00, 2),
+(89, 2021, 50, 30524109093.00, 31878906135.00, 2),
+(90, 2021, 31, 66068200583.00, 48134951429.00, 2),
+(91, 2021, 33, 1382868542893.00, 1512628905875.00, 2),
+(92, 2021, 52, 410979500000.00, 380350637000.00, 2),
+(93, 2021, 55, 100000000000.00, 531683989446.00, 2);
 
 -- --------------------------------------------------------
 
@@ -274,12 +292,12 @@ CREATE TABLE `kode_urut` (
 --
 
 INSERT INTO `kode_urut` (`id`, `no_urut`, `uraian`, `akronim`, `id_kode_level`) VALUES
-(1, '4.', 'PENDAPATAN DAERAH', NULL, 1),
-(2, '4.1.', 'PENDAPATAN ASLI DAERAH', NULL, 2),
-(3, '4.1.01.', 'Pajak Daerah', NULL, 3),
-(4, '4.1.02.', 'Retribusi Daerah', NULL, 3),
-(5, '4.1.03.', 'Hasil Pengelolaan Kekayaan Daerah Yang Dipisahkan', NULL, 3),
-(6, '4.1.04.', 'Lain-lain PAD Yang Sah', NULL, 3),
+(1, '4', 'PENDAPATAN DAERAH', 'PDH', 1),
+(2, '4.1', 'PENDAPATAN ASLI DAERAH', 'PAD', 2),
+(3, '4.1.01', 'Pajak Daerah', 'PD', 3),
+(4, '4.1.02', 'Retribusi Daerah', 'RD', 3),
+(5, '4.1.03', 'Hasil Pengelolaan Kekayaan Daerah Yang Dipisahkan', 'HPKDYD', 3),
+(6, '4.1.04', 'Lain-lain PAD Yang Sah', 'LPADYS', 3),
 (7, '4.2.', 'PENDAPATAN TRANSFER', NULL, 2),
 (8, '4.2.01.', 'Pendapatan Transfer Pemerintah Pusat', NULL, 3),
 (11, '4.3.', 'LAIN-LAIN PENDAPATAN DAERAH YANG SAH', NULL, 2),
@@ -854,7 +872,7 @@ ALTER TABLE `pajak_daerah`
 -- AUTO_INCREMENT untuk tabel `apbd_lampiran_1`
 --
 ALTER TABLE `apbd_lampiran_1`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT untuk tabel `jenis_apbd`
