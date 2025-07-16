@@ -161,6 +161,7 @@ if ($result->num_rows > 0):
                     <th style="text-align: center;">Perubahan</th>
                     <th style="text-align: center;">Bertambah/Berkurang</th>
                     <th style="text-align: center;">Persentase</th>
+                    <th style="text-align: center;">Level</th>
                     <th style="text-align: center;">Jenis APBD</th>
                 </tr>
             </thead>
@@ -176,6 +177,7 @@ if ($result->num_rows > 0):
                     $perubahan_display = htmlspecialchars(number_format($row['perubahan'] ?? 0, 2, ',', '.'));
                     $bertambahberkurang_display = htmlspecialchars(number_format($row['bertambah_berkurang'] ?? 0, 2, ',', '.'));
                     $persentase_display = htmlspecialchars(number_format($row['persentase'] ?? 0, 2, ',', '.')) . '%';
+                    $namalevel_display = htmlspecialchars($row['nama_level']);
                     $jenisapbd_display = htmlspecialchars($row['jenis_apbd']);
 
                     if ($is_level_1_or_2) {
@@ -186,6 +188,7 @@ if ($result->num_rows > 0):
                         $perubahan_display = '<strong>' . $perubahan_display . '</strong>';
                         $bertambahberkurang_display = '<strong>' . $bertambahberkurang_display . '</strong>';
                         $persentase_display = '<strong>' . $persentase_display . '</strong>';
+                        $namalevel_display = '<strong>' . $namalevel_display . '</strong>';
                         $jenisapbd_display = '<strong>' . $jenisapbd_display . '</strong>';
                     }
                 ?>
@@ -198,6 +201,7 @@ if ($result->num_rows > 0):
                         <td style="text-align:right"><?php echo $perubahan_display; ?></td>
                         <td style="text-align:right"><?php echo $bertambahberkurang_display; ?></td>
                         <td style="text-align:right"><?php echo $persentase_display; ?></td>
+                        <td style="text-align:left"><?php echo $namalevel_display; ?></td>
                         <td style="text-align:right"><?php echo $jenisapbd_display; ?></td>
                     </tr>
                 <?php endwhile; ?>

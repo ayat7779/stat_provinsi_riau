@@ -13,23 +13,20 @@ if ($selected_year != '') {
 }
 
 // Prepare the SQL query
-$sql = "SELECT kc.id_kode_level, a.tahun_lkpd, a.kode, kc.uraian, a.anggaran, a.realisasi, 
+$sql = "SELECT kc.id_kode_level, a.tahun_lkpd AS tahun, a.kode, kc.uraian, a.anggaran, a.realisasi, 
 CASE WHEN a.anggaran = 0 THEN 0 ELSE (a.anggaran-a.realisasi) END AS sisa_anggaran, 
-CASE WHEN a.anggaran = 0 THEN 0 ELSE (a.realisasi/a.anggaran)*100 END AS persentase 
+CASE WHEN a.anggaran = 0 THEN 0 ELSE (a.realisasi/a.anggaran)*100 END AS persentase, kl.nama_level 
 FROM (
 		    SELECT tahun_lkpd, LEFT(kode_catatan,2) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi 
             FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
-            " . $where_clause . "
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
 		    SELECT tahun_lkpd, LEFT(kode_catatan,4) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  
             FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
-            " . $where_clause . "
 		    GROUP BY tahun_lkpd, kode 
 		    UNION ALL
 		    SELECT tahun_lkpd, kode_catatan AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  
             FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
-            " . $where_clause . "
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
             SELECT tahun_lkpd, '333330' AS kode, 
@@ -40,7 +37,6 @@ FROM (
 		    FROM lkpd_apbd_lampiran_1 la 
 		    INNER JOIN kode_catatan kc 
 		    ON la.`id_kode_catatan`=kc.`id`
-            " . $where_clause . "
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
 		    SELECT tahun_lkpd, '333331' AS kode, 
@@ -53,7 +49,6 @@ FROM (
 		    FROM lkpd_apbd_lampiran_1 la 
 		    INNER JOIN kode_catatan kc 
 		    ON la.`id_kode_catatan`=kc.`id`
-            " . $where_clause . "
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
 		    SELECT tahun_lkpd, '444441' AS kode,
@@ -70,7 +65,6 @@ FROM (
 		    FROM lkpd_apbd_lampiran_1 la 
 		    INNER JOIN kode_catatan kc 
 		    ON la.`id_kode_catatan`=kc.`id`
-            " . $where_clause . "
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
 		    SELECT tahun_lkpd, '444440' AS kode,
@@ -81,10 +75,10 @@ FROM (
 		    FROM lkpd_apbd_lampiran_1 la 
 		    INNER JOIN kode_catatan kc 
 		    ON la.`id_kode_catatan`=kc.`id`
-            " . $where_clause . "
 		    GROUP BY tahun_lkpd, kode     
             ) AS a
             LEFT JOIN kode_catatan AS kc ON a.kode = kc.`kode_catatan`
+            LEFT JOIN kode_level AS kl ON kl.id = kc.id_kode_level
             ORDER BY a.tahun_lkpd, a.kode ASC";
 
 // --- PENANGANAN BINDING PARAMETER ---
@@ -194,6 +188,7 @@ if ($result->num_rows > 0):
                     <th style="text-align: center;">Realisasi</th>
                     <th style="text-align: center;">Persentase</th>
                     <th style="text-align: center;">Sisa Anggaran</th>
+                    <th style="text-align: center;">Nama Level</th>
                 </tr>
             </thead>
             <tbody>
@@ -201,13 +196,14 @@ if ($result->num_rows > 0):
                 while ($row = $result->fetch_assoc()):
                     $is_level_1_or_2 = ($row['id_kode_level'] == 1 || $row['id_kode_level'] == 2);
 
-                    $tahun_display = htmlspecialchars($row['tahun_lkpd']);
+                    $tahun_display = htmlspecialchars($row['tahun']);
                     $kode_display = htmlspecialchars($row['kode']);
                     $uraian_display = htmlspecialchars($row['uraian']);
                     $anggaran_display = htmlspecialchars(number_format($row['anggaran'] ?? 0, 2, ',', '.'));
                     $realisasi_display = htmlspecialchars(number_format($row['realisasi'] ?? 0, 2, ',', '.'));
                     $sisaanggaran_display = htmlspecialchars(number_format($row['sisa_anggaran'] ?? 0, 2, ',', '.'));
                     $persentase_display = htmlspecialchars(number_format($row['persentase'] ?? 0, 2, ',', '.')) . '%';
+                    $namalevel_display = htmlspecialchars($row['nama_level']);
 
                     if ($is_level_1_or_2) {
                         $tahun_display = '<strong>' . $tahun_display . '</strong>';
@@ -217,6 +213,7 @@ if ($result->num_rows > 0):
                         $realisasi_display = '<strong>' . $realisasi_display . '</strong>';
                         $sisaanggaran_display = '<strong>' . $sisaanggaran_display . '</strong>';
                         $persentase_display = '<strong>' . $persentase_display . '</strong>';
+                        $namalevel_display = '<strong>' . $namalevel_display . '</strong>';
                     }
                 ?>
                     <tr>
@@ -228,6 +225,7 @@ if ($result->num_rows > 0):
                         <td style="text-align:right"><?php echo $realisasi_display; ?></td>
                         <td style="text-align:right"><?php echo $persentase_display; ?></td>
                         <td style="text-align:right"><?php echo $sisaanggaran_display; ?></td>
+                        <td><?php echo $namalevel_display; ?></td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
