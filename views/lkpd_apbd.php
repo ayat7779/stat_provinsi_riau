@@ -8,38 +8,165 @@ if (isset($_GET['tahun_lkpd']) && $_GET['tahun_lkpd'] != '') {
 }
 
 $where_clause = "";
+$param_count = 0; // Initialize a counter for parameters
 if ($selected_year != '') {
     $where_clause = " WHERE tahun_lkpd = ?";
+    // Explicitly set the count to 18 based on manual inspection of UNION ALL blocks.
+    // This value *must* exactly match the number of times `tahun_lkpd = ?` appears in the final SQL string.
+    $param_count = 18;
 }
 
 // Prepare the SQL query
-$sql = "SELECT kc.id_kode_level, a.tahun_lkpd AS tahun, a.kode, kc.uraian, a.anggaran, a.realisasi, 
+$sql = "SELECT a.tahun_lkpd AS tahun, a.kode, kc.uraian, a.anggaran, a.realisasi, 
 CASE WHEN a.anggaran = 0 THEN 0 ELSE (a.anggaran-a.realisasi) END AS sisa_anggaran, 
-CASE WHEN a.anggaran = 0 THEN 0 ELSE (a.realisasi/a.anggaran)*100 END AS persentase, kl.nama_level 
+CASE WHEN a.anggaran = 0 THEN 0 ELSE (a.realisasi/a.anggaran)*100 END AS persentase, kl.nama_level, kc.id_kode_level
 FROM (
-		    SELECT tahun_lkpd, LEFT(kode_catatan,2) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi 
-            FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
-		    GROUP BY tahun_lkpd, kode
-		    UNION ALL
-		    SELECT tahun_lkpd, LEFT(kode_catatan,4) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  
-            FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
-		    GROUP BY tahun_lkpd, kode 
-		    UNION ALL
-		    SELECT tahun_lkpd, kode_catatan AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  
-            FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
-		    GROUP BY tahun_lkpd, kode
-		    UNION ALL
-            SELECT tahun_lkpd, '333330' AS kode, 
-		    SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_anggaran ELSE 0 END)
-            +SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
-		    SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_realisasi ELSE 0 END)
-            +SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+	-- AKUN
+	SELECT tahun_lkpd, LEFT(kode_catatan,2) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi 
+        FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
+	GROUP BY tahun_lkpd, kode
+	UNION ALL
+	-- KELOMPOK
+	SELECT tahun_lkpd, LEFT(kode_catatan,4) AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  
+        FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
+	GROUP BY tahun_lkpd, kode 
+	UNION ALL
+	-- JENIS
+	SELECT tahun_lkpd, kode_catatan AS kode, SUM(jumlah_anggaran) AS anggaran, SUM(jumlah_realisasi) AS realisasi  
+        FROM lkpd_apbd_lampiran_1 la INNER JOIN kode_catatan kc ON la.`id_kode_catatan`=kc.`id`
+	GROUP BY tahun_lkpd, kode
+	UNION ALL
+	-- Jumlah PAD
+        SELECT tahun_lkpd, '1.1111' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.1.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.1.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
 		    FROM lkpd_apbd_lampiran_1 la 
 		    INNER JOIN kode_catatan kc 
 		    ON la.`id_kode_catatan`=kc.`id`
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
-		    SELECT tahun_lkpd, '333331' AS kode, 
+	-- Jumlah TRANSFER DANA PERIMBANGAN
+        SELECT tahun_lkpd, '1.2222' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.2.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.2.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- JUMLAH PENDAPATAN TRANSFER PEMERINTAH PUSAT-LAINNYA
+        SELECT tahun_lkpd, '1.3333' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.3.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.3.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- JUMLAH PENDAPATAN TRANSFER
+        SELECT tahun_lkpd, '1.3334' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.2.') THEN la.jumlah_anggaran ELSE 0 END)
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.3.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran,
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.2.') THEN la.jumlah_realisasi ELSE 0 END) 
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.3.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- JUMLAH LAIN-LAIN PENDAPATAN DAERAH YANG SAH
+        SELECT tahun_lkpd, '1.4444' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.4.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.4.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- JUMLAH PENDAPATAN
+        SELECT tahun_lkpd, '1.5555' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.1.') THEN la.jumlah_anggaran ELSE 0 END)		    
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.2.') THEN la.jumlah_anggaran ELSE 0 END)
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.3.') THEN la.jumlah_anggaran ELSE 0 END)
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.4.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran,
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.1.') THEN la.jumlah_realisasi ELSE 0 END)		    
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.2.') THEN la.jumlah_realisasi ELSE 0 END) 
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.3.') THEN la.jumlah_realisasi ELSE 0 END)
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '1.4.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- Jumlah Belanja Operasi
+        SELECT tahun_lkpd, '2.1111' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '2.1.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '2.1.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- Jumlah Belanja Modal
+        SELECT tahun_lkpd, '2.2222' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '2.2.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '2.2.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- Jumlah Belanja Tak terduga
+        SELECT tahun_lkpd, '2.3333' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '2.3.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '2.3.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- JUMLAH TRANSFER-BAGI HASIL PENDAPATAN KE KAB/KOTA
+        SELECT tahun_lkpd, '3.1111' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '3.1.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '3.1.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- JUMLAH TRANSFER-BANTUAN KEUANGAN
+        SELECT tahun_lkpd, '3.2222' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '3.2.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '3.2.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- JUMLAH TRANSFER
+        SELECT tahun_lkpd, '3.2223' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '3.1.') THEN la.jumlah_anggaran ELSE 0 END)		    
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '3.2.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '3.1.') THEN la.jumlah_realisasi ELSE 0 END)
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '3.2.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- Jumlah Belanja dan Transfer
+        SELECT tahun_lkpd, '3.2224' AS kode, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_anggaran ELSE 0 END)
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran, 
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_realisasi ELSE 0 END)
+		    +SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- Surplus/Defisit
+	SELECT tahun_lkpd, '3.2225' AS kode, 
 		    SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN la.jumlah_anggaran ELSE 0 END)-
             (SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_anggaran ELSE 0 END)+
             SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_anggaran ELSE 0 END)) AS anggaran, 
@@ -51,7 +178,37 @@ FROM (
 		    ON la.`id_kode_catatan`=kc.`id`
 		    GROUP BY tahun_lkpd, kode
 		    UNION ALL
-		    SELECT tahun_lkpd, '444441' AS kode,
+	-- JUMLAH PENERIMAAN PEMBIAYAAN		    
+	SELECT tahun_lkpd, '4.1111' AS kode,
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran,
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- JUMLAH PENGELUARAN PEMBIAYAAN		    
+	SELECT tahun_lkpd, '4.2222' AS kode,
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_anggaran ELSE 0 END) AS anggaran,
+		    SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_realisasi ELSE 0 END) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+		    UNION ALL
+	-- Pembiayaan Netto		    
+	SELECT tahun_lkpd, '4.2223' AS kode,
+		    (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_anggaran ELSE 0 END)-
+            SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_anggaran ELSE 0 END)) AS anggaran,
+		    (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_realisasi ELSE 0 END)-
+            SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_realisasi ELSE 0 END)) AS realisasi 
+		    FROM lkpd_apbd_lampiran_1 la 
+		    INNER JOIN kode_catatan kc 
+		    ON la.`id_kode_catatan`=kc.`id`
+		    GROUP BY tahun_lkpd, kode
+	UNION ALL
+	-- SILPA
+	SELECT tahun_lkpd, '4.2224' AS kode,
 			(SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '1.') THEN la.jumlah_anggaran ELSE 0 END)-
             (SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '2.') THEN la.jumlah_anggaran ELSE 0 END)+
             SUM(CASE WHEN (LEFT(kc.kode_catatan,2)= '3.') THEN la.jumlah_anggaran ELSE 0 END)))+ 
@@ -66,33 +223,38 @@ FROM (
 		    INNER JOIN kode_catatan kc 
 		    ON la.`id_kode_catatan`=kc.`id`
 		    GROUP BY tahun_lkpd, kode
-		    UNION ALL
-		    SELECT tahun_lkpd, '444440' AS kode,
-		    (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_anggaran ELSE 0 END)-
-            SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_anggaran ELSE 0 END)) AS anggaran,
-		    (SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.1.') THEN la.jumlah_realisasi ELSE 0 END)-
-            SUM(CASE WHEN (LEFT(kc.kode_catatan,4)= '4.2.') THEN la.jumlah_realisasi ELSE 0 END)) AS realisasi 
-		    FROM lkpd_apbd_lampiran_1 la 
-		    INNER JOIN kode_catatan kc 
-		    ON la.`id_kode_catatan`=kc.`id`
-		    GROUP BY tahun_lkpd, kode     
             ) AS a
             LEFT JOIN kode_catatan AS kc ON a.kode = kc.`kode_catatan`
             LEFT JOIN kode_level AS kl ON kl.id = kc.id_kode_level
+            ". $where_clause ."
             ORDER BY a.tahun_lkpd, a.kode ASC";
 
 // --- PENANGANAN BINDING PARAMETER ---
-// Karena ada 7 subquery, Anda perlu mengikat parameter 7 kali
-
 if ($selected_year != '') {
-    $types = str_repeat("s", 7); // Or "i" if tahun_lkpd is integer
+    // --- IMPORTANT: Calculate the actual number of '?' in the SQL query ---
+    // This is the most robust way to ensure the count is correct.
+    $actual_param_count = substr_count($sql, '?');
+
+    // Make sure our expected param_count matches the actual count.
+    // If you always intend to have 18, then perhaps your SQL needs trimming.
+    // But if you've added more blocks, $actual_param_count is king.
+    // Given the previous error showed 18 binds and 21 subqueries,
+    // let's assume the actual count of '?' in the constructed $sql is the source of truth.
+    if ($actual_param_count === 0) {
+        // This case should ideally not happen if $selected_year is set
+        // and $where_clause is being appended.
+        // It might indicate an issue if $where_clause is empty for some reason.
+        // Or if you only want to bind if the count is > 0
+    }
+
+    $types = str_repeat("s", $actual_param_count); // Use the dynamically counted parameters
 
     // Create an array to hold references to the parameter
     $bind_params = [];
     $bind_params[] = $types; // First argument is the types string
 
     // Loop to add $selected_year by reference for each placeholder
-    for ($i = 0; $i < 7; $i++) {
+    for ($i = 0; $i < $actual_param_count; $i++) { // Use actual_param_count here
         $bind_params[] = &$selected_year; // Pass by reference
     }
 
@@ -142,7 +304,6 @@ if ($years_result->num_rows > 0) {
 
 <h2 style="text-align: center;">Lampiran I - LKPD</h2>
 
-<!-- Year Filter Form -->
 <form method="GET" action="index.php">
     <label for="tahun_lkpd">Filter Tahun:</label>
     <select name="tahun_lkpd" id="tahun_lkpd" onchange="this.form.submit()">
@@ -196,24 +357,24 @@ if ($result->num_rows > 0):
                 while ($row = $result->fetch_assoc()):
                     $is_level_1_or_2 = ($row['id_kode_level'] == 1 || $row['id_kode_level'] == 2);
 
-                    $tahun_display = htmlspecialchars($row['tahun']);
-                    $kode_display = htmlspecialchars($row['kode']);
-                    $uraian_display = htmlspecialchars($row['uraian']);
-                    $anggaran_display = htmlspecialchars(number_format($row['anggaran'] ?? 0, 2, ',', '.'));
-                    $realisasi_display = htmlspecialchars(number_format($row['realisasi'] ?? 0, 2, ',', '.'));
-                    $sisaanggaran_display = htmlspecialchars(number_format($row['sisa_anggaran'] ?? 0, 2, ',', '.'));
-                    $persentase_display = htmlspecialchars(number_format($row['persentase'] ?? 0, 2, ',', '.')) . '%';
-                    $namalevel_display = htmlspecialchars($row['nama_level']);
+                    $tahun_display          = htmlspecialchars($row['tahun']);
+                    $kode_display           = htmlspecialchars($row['kode']);
+                    $uraian_display         = htmlspecialchars($row['uraian']);
+                    $anggaran_display       = htmlspecialchars(number_format($row['anggaran'] ?? 0, 2, ',', '.'));
+                    $realisasi_display      = htmlspecialchars(number_format($row['realisasi'] ?? 0, 2, ',', '.'));
+                    $sisaanggaran_display   = htmlspecialchars(number_format($row['sisa_anggaran'] ?? 0, 2, ',', '.'));
+                    $persentase_display     = htmlspecialchars(number_format($row['persentase'] ?? 0, 2, ',', '.')) . '%';
+                    $namalevel_display      = htmlspecialchars($row['nama_level']);
 
                     if ($is_level_1_or_2) {
-                        $tahun_display = '<strong>' . $tahun_display . '</strong>';
-                        $kode_display = '<strong>' . $kode_display . '</strong>';
-                        $uraian_display = '<strong>' . $uraian_display . '</strong>';
-                        $anggaran_display = '<strong>' . $anggaran_display . '</strong>';
-                        $realisasi_display = '<strong>' . $realisasi_display . '</strong>';
-                        $sisaanggaran_display = '<strong>' . $sisaanggaran_display . '</strong>';
-                        $persentase_display = '<strong>' . $persentase_display . '</strong>';
-                        $namalevel_display = '<strong>' . $namalevel_display . '</strong>';
+                        $tahun_display          = '<strong>' . $tahun_display . '</strong>';
+                        $kode_display           = '<strong>' . $kode_display . '</strong>';
+                        $uraian_display         = '<strong>' . $uraian_display . '</strong>';
+                        $anggaran_display       = '<strong>' . $anggaran_display . '</strong>';
+                        $realisasi_display      = '<strong>' . $realisasi_display . '</strong>';
+                        $sisaanggaran_display   = '<strong>' . $sisaanggaran_display . '</strong>';
+                        $persentase_display     = '<strong>' . $persentase_display . '</strong>';
+                        $namalevel_display      = '<strong>' . $namalevel_display . '</strong>';
                     }
                 ?>
                     <tr>

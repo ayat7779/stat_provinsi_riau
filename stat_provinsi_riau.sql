@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 14 Jul 2025 pada 09.38
+-- Waktu pembuatan: 18 Jul 2025 pada 07.37
 -- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.0.30
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -230,10 +230,10 @@ INSERT INTO `kode_catatan` (`id`, `kode_catatan`, `uraian`, `id_kode_level`) VAL
 (57, '4.1.4.', 'Penerimaan Kembali Pemberian Pinjaman Daerah', 3),
 (58, '4.2.', 'PENGELUARAN PEMBIAYAAN', 2),
 (59, '4.2.2.', 'Penyertaan Modal Pemerintah Daerah', 3),
-(60, '333330', 'JUMLAH BELANJA DAN TRANSFER', 1),
-(61, '333331', 'SURPLUS/DEFISIT', 1),
-(62, '444440', 'PEMBIAYAAN NETT0', 1),
-(63, '444441', 'Sisa Lebih Pembiayaan Anggaran (SILPA)', 1),
+(60, '3.2224', '*JUMLAH BELANJA DAN TRANSFER*', 1),
+(61, '3.2225', '*SURPLUS/DEFISIT*', 1),
+(62, '4.2223', '*PEMBIAYAAN NETT0*', 1),
+(63, '4.2224', '*Sisa Lebih Pembiayaan Anggaran (SILPA)*', 1),
 (64, '4.1.5.', 'Penerimaan Kembali Investasi Non Permanen', 3),
 (65, '3.2.2.', 'Bantuan Keuangan ke Kabupaten/Kota', 3),
 (66, '3.2.5.', 'Bantuan Keuangan ke Partai Politik', 3),
@@ -248,7 +248,21 @@ INSERT INTO `kode_catatan` (`id`, `kode_catatan`, `uraian`, `id_kode_level`) VAL
 (75, '4.2.1.', 'Pembentukan Dana Cadangan', 3),
 (76, '4.2.5.', 'Pembayaran Kekurangan Belanja Bagi Hasil', 3),
 (77, '4.2.6.', 'Pembayaran Pokok Hutang Kepada Pihak Ketiga', 3),
-(78, '4.2.7.', 'Piutang Tuntutan Ganti Rugi', 3);
+(78, '4.2.7.', 'Piutang Tuntutan Ganti Rugi', 3),
+(79, '1.1111', '*JUMLAH PENDAPATAN ASLI DAERAH*', 1),
+(80, '1.2222', '*JUMLAH PENDAPATAN TRANSFER DANA PERIMBANGAN*', 1),
+(81, '1.3333', '*JUMLAH PENDAPATAN TRANSFER PEMERINTAH PUSAT-LAINNYA*', 1),
+(82, '1.3334', '*JUMLAH PENDAPATAN TRANSFER*', 1),
+(83, '1.4444', '*JUMLAH LAIN-LAIN PENDAPATAN DAERAH YANG SAH*', 1),
+(84, '1.5555', '*JUMLAH PENDAPATAN*', 1),
+(85, '2.1111', '*JUMLAH BELANJA OPERASI*', 1),
+(86, '2.2222', '*JUMLAH BELANJA MODAL*', 1),
+(87, '2.3333', '*JUMLAH BELANJA TAK TERDUGA*', 1),
+(88, '3.1111', '*JUMLAH TRANSFER-BAGI HASIL PENDAPATAN KE KAB/KOTA*', 1),
+(89, '3.2222', '*JUMLAH TRANSFER-BANTUAN KEUANGAN*', 1),
+(90, '3.2223', '*JUMLAH TRANSFER*', 1),
+(91, '4.1111', '*JUMLAH PENERIMAAN PEMBIAYAAN*', 1),
+(92, '4.2222', '*JUMLAH PENGELUARAN PEMBIAYAAN*', 1);
 
 -- --------------------------------------------------------
 
@@ -292,9 +306,9 @@ CREATE TABLE `kode_urut` (
 --
 
 INSERT INTO `kode_urut` (`id`, `no_urut`, `uraian`, `akronim`, `id_kode_level`) VALUES
-(1, '4', 'PENDAPATAN DAERAH', 'PDH', 1),
-(2, '4.1', 'PENDAPATAN ASLI DAERAH', 'PAD', 2),
-(3, '4.1.01', 'Pajak Daerah', 'PD', 3),
+(1, '4.', 'PENDAPATAN DAERAH', 'PDH', 1),
+(2, '4.1.', 'PENDAPATAN ASLI DAERAH', 'PAD', 2),
+(3, '4.1.01.', 'Pajak Daerah', 'PD', 3),
 (4, '4.1.02', 'Retribusi Daerah', 'RD', 3),
 (5, '4.1.03', 'Hasil Pengelolaan Kekayaan Daerah Yang Dipisahkan', 'HPKDYD', 3),
 (6, '4.1.04', 'Lain-lain PAD Yang Sah', 'LPADYS', 3),
@@ -323,18 +337,22 @@ INSERT INTO `kode_urut` (`id`, `no_urut`, `uraian`, `akronim`, `id_kode_level`) 
 (53, '6.', 'PEMBIAYAAN DAERAH', NULL, 1),
 (54, '6.1.', 'PENERIMAAN PEMBIAYAAN', NULL, 2),
 (55, '6.1.01.', 'Sisa Lebih Perhitungan Anggaran Tahun Sebelumnya', NULL, 3),
-(56, '6.3.', 'Sisa Lebih Pembiayaan Anggaran Daerah Tahun Berkenaan (SILPA)', NULL, 2),
-(57, '5.5.', 'SURPLUS/DEFISIT', NULL, 2),
-(58, '6.2.9', 'Pembiayaan Neto', NULL, 2),
+(56, '6.3.', 'Sisa Lebih Pembiayaan Anggaran Daerah Tahun Berkenaan (SILPA)', 'SILPA', 1),
+(57, '5.5555', '* Total Surplus/Defisit *', '+/-', 1),
+(58, '6.2223', '* Pembiayaan Neto *', 'Pemb Net', 2),
 (59, '6.2.', 'PENGELUARAN PEMBIAYAAN', NULL, 2),
 (60, '6.2.02.', 'Penyertaan Modal Daerah', NULL, 3),
-(61, '4.1.01.01', 'Pajak Kendaraan Bermotor', 'PKB', 6),
-(62, '4.1.01.02', 'Bea Balik Nama Kendaraan Bermotor', 'BBNKB', 6),
-(63, '4.1.01.03', 'Pajak Bahan Bakar Kendaraan Bermotor', 'PBBKB', 6),
-(64, '4.1.01.04', 'Pajak Air Permukaan', 'PAP', 6),
-(65, '4.1.01.05', 'Pajak Rokok', 'PR', 6),
-(66, '4.1.01.17', 'Pajak Alat Berat', 'PAB', 6),
-(67, '4.1.01.18', 'Opsen Mineral Bukan Logam dan Batuan', 'OMBLB', 6);
+(61, '4.1.01.01.', 'Pajak Kendaraan Bermotor', 'PKB', 6),
+(62, '4.1.01.02.', 'Bea Balik Nama Kendaraan Bermotor', 'BBNKB', 6),
+(63, '4.1.01.03.', 'Pajak Bahan Bakar Kendaraan Bermotor', 'PBBKB', 6),
+(64, '4.1.01.04.', 'Pajak Air Permukaan', 'PAP', 6),
+(65, '4.1.01.05.', 'Pajak Rokok', 'PR', 6),
+(66, '4.1.01.17.', 'Pajak Alat Berat', 'PAB', 6),
+(67, '4.1.01.18.', 'Opsen Mineral Bukan Logam dan Batuan', 'OMBLB', 6),
+(68, '4.3333', '* Jumlah Pendapatan *', 'Jml Pendapatan', 1),
+(69, '5.4444', '* Jumlah Belanja *', 'Jml_Belanja', 1),
+(70, '6.1111', '* Jumlah Penerimaan Pembiayaan *', 'Jml Pen Biaya', 1),
+(71, '6.2222', '* Jumlah Pengeluaran Pembiayaan *', 'Jml Pkl Biaya', 1);
 
 -- --------------------------------------------------------
 
@@ -884,7 +902,7 @@ ALTER TABLE `jenis_apbd`
 -- AUTO_INCREMENT untuk tabel `kode_catatan`
 --
 ALTER TABLE `kode_catatan`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT untuk tabel `kode_level`
@@ -896,7 +914,7 @@ ALTER TABLE `kode_level`
 -- AUTO_INCREMENT untuk tabel `kode_urut`
 --
 ALTER TABLE `kode_urut`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT untuk tabel `lkpd_apbd_lampiran_1`

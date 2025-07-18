@@ -7,7 +7,8 @@ if (isset($_GET['tahun']) && $_GET['tahun'] != '') {
     $selected_year = $_GET['tahun'];
 }
 
-$sql = "SELECT tahun, kode, b.uraian, anggaran, perubahan,   
+$sql = "
+SELECT tahun, kode, b.uraian, anggaran, perubahan,   
     IFNULL(ROUND((perubahan - anggaran), 2), 0) AS bertambah_berkurang, 
     IFNULL(ROUND(((perubahan - anggaran) / anggaran) * 100, 2), 0) AS persentase, 
     c.akronim AS jenis_apbd,
@@ -34,12 +35,52 @@ FROM (
     INNER JOIN jenis_apbd AS c ON a.id_jenis_apbd=c.id
     GROUP BY tahun, kode, id_jenis_apbd
     UNION ALL
+    -- jumlah pendapatan
+    SELECT tahun, '4.3333' AS kode, 
+    SUM(CASE WHEN (LEFT(b.no_urut,2)= '4.') THEN a.jumlah_anggaran ELSE 0 END) AS anggaran, 
+    SUM(CASE WHEN (LEFT(b.no_urut,2)= '4.') THEN a.jumlah_perubahan ELSE 0 END) AS perubahan,
+    id_jenis_apbd 
+    FROM apbd_lampiran_1 AS a 
+    INNER JOIN kode_urut AS b ON a.id_kode_urut=b.id
+    INNER JOIN jenis_apbd AS c ON a.id_jenis_apbd=c.id
+    GROUP BY tahun, kode, id_jenis_apbd
+    UNION ALL
+    -- jumlah belanja
+    SELECT tahun, '5.4444' AS kode, 
+    SUM(CASE WHEN (LEFT(b.no_urut,2)= '5.') THEN a.jumlah_anggaran ELSE 0 END) AS anggaran, 
+    SUM(CASE WHEN (LEFT(b.no_urut,2)= '5.') THEN a.jumlah_perubahan ELSE 0 END) AS perubahan,
+    id_jenis_apbd 
+    FROM apbd_lampiran_1 AS a 
+    INNER JOIN kode_urut AS b ON a.id_kode_urut=b.id
+    INNER JOIN jenis_apbd AS c ON a.id_jenis_apbd=c.id
+    GROUP BY tahun, kode, id_jenis_apbd
+    UNION ALL
     -- surplus defisit
-    SELECT tahun, '5.5.' AS kode, 
+    SELECT tahun, '5.5555' AS kode, 
     SUM(CASE WHEN (LEFT(b.no_urut,2)= '4.') THEN a.jumlah_anggaran ELSE 0 END)
     -SUM(CASE WHEN (LEFT(b.no_urut,2)= '5.') THEN a.jumlah_anggaran ELSE 0 END)AS anggaran, 
     SUM(CASE WHEN (LEFT(b.no_urut,2)= '4.') THEN a.jumlah_perubahan ELSE 0 END)
     -SUM(CASE WHEN (LEFT(b.no_urut,2)= '5.') THEN a.jumlah_perubahan ELSE 0 END) AS perubahan,
+    id_jenis_apbd 
+    FROM apbd_lampiran_1 AS a 
+    INNER JOIN kode_urut AS b ON a.id_kode_urut=b.id
+    INNER JOIN jenis_apbd AS c ON a.id_jenis_apbd=c.id
+    GROUP BY tahun, kode, id_jenis_apbd
+    UNION ALL
+    -- jumlah penerimaan pembiayaan
+    SELECT tahun, '6.1111' AS kode, 
+    SUM(CASE WHEN (LEFT(b.no_urut,4)= '6.1.') THEN a.jumlah_anggaran ELSE 0 END) AS anggaran, 
+    SUM(CASE WHEN (LEFT(b.no_urut,4)= '6.1.') THEN a.jumlah_perubahan ELSE 0 END) AS perubahan,
+    id_jenis_apbd 
+    FROM apbd_lampiran_1 AS a 
+    INNER JOIN kode_urut AS b ON a.id_kode_urut=b.id
+    INNER JOIN jenis_apbd AS c ON a.id_jenis_apbd=c.id
+    GROUP BY tahun, kode, id_jenis_apbd
+    UNION ALL
+    -- pembiayaan pengeluaran pembiayaan
+    SELECT tahun, '6.2222' AS kode, 
+    SUM(CASE WHEN (LEFT(b.no_urut,4)= '6.2.') THEN a.jumlah_anggaran ELSE 0 END)AS anggaran, 
+    SUM(CASE WHEN (LEFT(b.no_urut,4)= '6.2.') THEN a.jumlah_perubahan ELSE 0 END) AS perubahan,
     id_jenis_apbd 
     FROM apbd_lampiran_1 AS a 
     INNER JOIN kode_urut AS b ON a.id_kode_urut=b.id
