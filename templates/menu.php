@@ -2,7 +2,8 @@
                     <div class="menu-section">
                             <h3><i class="fas fa-cog"></i> Pengaturan & Referensi</h3>
                             <ul>
-                                    <li><a href="pages/apbd-kode-urut/read.php"><i class="fas fa-list-ol"></i> Kode Urut APBD</a></li>
+                                    <li><a href="pages/apbd-kode-urut/read.php"><i class="fas fa-list-ol"></i> Kode Urut PMDN77 APBD</a></li>
+                                    <li><a href="pages/apbd-kode-urut-pmdn13/read.php"><i class="fas fa-list-ol"></i> Kode Urut PMDN13 APBD</a></li>
                                     <li><a href="pages/lkpd-kode-catatan/read.php"><i class="fas fa-sticky-note"></i> Kode Catatan LKPD APBD</a></li>
                                     <li><a href="pages/apbd-jenis/read.php"><i class="fas fa-tags"></i> Jenis APBD</a></li>
                                     <li><a href="pages/level-kode/read.php"><i class="fas fa-layer-group"></i> Level Kode</a></li>

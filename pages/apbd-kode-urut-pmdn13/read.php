@@ -5,7 +5,7 @@ include '../../config/database.php';
 include '../../templates/header.php';
 
 $sql = "SELECT ku.id, ku.no_urut, ku.uraian, kl.nama_level, ku.akronim
-        FROM kode_urut ku
+        FROM kode_urut_13 ku
         INNER JOIN kode_level kl
         ON ku.id_kode_level = kl.id
         ORDER BY ku.no_urut ASC";
@@ -13,7 +13,7 @@ $result = $conn->query($sql);
 
 ?>
 
-<h2 style="text-align: center;">Daftar Kode Urut APBD - PMDN77/2020</h2>
+<h2 style="text-align: center;">Daftar Kode Urut APBD - PMDN13/2002</h2>
 <div class="button-group">
     <a href="../../index.php">Home</a>
     <a href="create.php">Tambah Data</a>
