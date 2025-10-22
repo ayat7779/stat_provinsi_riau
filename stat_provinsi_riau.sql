@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 22 Okt 2025 pada 06.05
+-- Waktu pembuatan: 22 Okt 2025 pada 10.53
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.0.30
 
@@ -835,6 +835,98 @@ CREATE TABLE `pajak_daerah` (
   `tw4` decimal(4,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `poskas_deposito`
+--
+
+CREATE TABLE `poskas_deposito` (
+  `id` int(11) NOT NULL,
+  `id_bank` int(11) NOT NULL,
+  `kode_deposito` varchar(255) NOT NULL,
+  `jumlah_deposito` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `poskas_deposito`
+--
+
+INSERT INTO `poskas_deposito` (`id`, `id_bank`, `kode_deposito`, `jumlah_deposito`) VALUES
+(0, 1, '001-brks', 150000000000);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `poskas_nama_bank`
+--
+
+CREATE TABLE `poskas_nama_bank` (
+  `id` int(11) NOT NULL,
+  `nama_bank` varchar(255) NOT NULL,
+  `akronim_bank` varchar(50) NOT NULL,
+  `alamat` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `poskas_nama_bank`
+--
+
+INSERT INTO `poskas_nama_bank` (`id`, `nama_bank`, `akronim_bank`, `alamat`) VALUES
+(0, 'Bank Riau-Kepri', 'BRKS', 'PEKANBARU'),
+(1, 'Bank Rakyat Indonesia', 'BRI', 'PEKANBARU');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `poskas_rekening_giro`
+--
+
+CREATE TABLE `poskas_rekening_giro` (
+  `id` int(11) NOT NULL,
+  `id_bank` int(11) NOT NULL,
+  `kode_rekening_giro` varchar(15) NOT NULL,
+  `nama_rekening_giro` varchar(255) NOT NULL,
+  `status` int(1) NOT NULL,
+  `keterangan` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `poskas_rekening_giro`
+--
+
+INSERT INTO `poskas_rekening_giro` (`id`, `id_bank`, `kode_rekening_giro`, `nama_rekening_giro`, `status`, `keterangan`) VALUES
+(1, 0, '101-01-00043', 'BUD QQ SISA LEBIH PERHITUNGAN ANGGARAN', 1, NULL),
+(2, 0, '101-01-00044', 'BUD QQ PENGELUARAN BELANJA DAERAH', 1, NULL),
+(3, 0, '101-01-00045', 'RKUD PROV. RIAU', 1, NULL),
+(4, 0, '101-01-00046', 'BUD QQ PENDAPATAN ASLI DAERAH', 1, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `poskas_uraian_deposito`
+--
+
+CREATE TABLE `poskas_uraian_deposito` (
+  `id` int(11) NOT NULL,
+  `tgl_pos_deposito` datetime DEFAULT NULL,
+  `id_bank` int(11) NOT NULL,
+  `jumlah_deposito` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `poskas_uraian_giro`
+--
+
+CREATE TABLE `poskas_uraian_giro` (
+  `id` int(11) NOT NULL,
+  `tgl_poskas` datetime NOT NULL,
+  `id_bank` int(11) NOT NULL,
+  `jumlah_kas` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indeks untuk tabel yang dibuang
 --
@@ -882,6 +974,36 @@ ALTER TABLE `pajak_daerah`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeks untuk tabel `poskas_deposito`
+--
+ALTER TABLE `poskas_deposito`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `poskas_nama_bank`
+--
+ALTER TABLE `poskas_nama_bank`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `poskas_rekening_giro`
+--
+ALTER TABLE `poskas_rekening_giro`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `poskas_uraian_deposito`
+--
+ALTER TABLE `poskas_uraian_deposito`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `poskas_uraian_giro`
+--
+ALTER TABLE `poskas_uraian_giro`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
@@ -926,6 +1048,12 @@ ALTER TABLE `lkpd_apbd_lampiran_1`
 --
 ALTER TABLE `pajak_daerah`
   MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `poskas_rekening_giro`
+--
+ALTER TABLE `poskas_rekening_giro`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 -- --------------------------------------------------------
 
